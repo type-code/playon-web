@@ -22,8 +22,17 @@ input, textarea, button {
 	box-shadow: 0px 4px 100px rgba(0,0,0,0.4);
 	border-radius: 4px;
 	padding: 10px;
+	padding-bottom: 2px;
 	position: relative;
 }
+#page:hover > #timeline {
+	height: 30px;
+	opacity: 1;
+}
+#page:hover > #timer {
+	top: calc(100% + 20px);
+}
+
 #page #player {
 	/*border-radius: 4px;
 	overflow: hidden;*/
@@ -34,30 +43,83 @@ input, textarea, button {
 	top: 0px;
 	right: 0px;
 	bottom: 0px;
-	z-index: 100;
+	z-index: 25;
 }
 
 #page #timer {
     position: absolute;
-    width: 120px;
+    width: 100px;
     height: 27px;
-    background: #333;
+    background: #444;
     color: white;
     text-align: center;
     line-height: 1.8;
-    left: calc(50% - 60px);
-    top: 100%;
-    border-radius: 0px 0px 6px 6px;
+    left: calc(50% - 50px);
+    top: calc(100% + 10px);
     font-size: 14px;
     font-weight: 300;
     box-shadow: 0px 4px 55px rgba(0,0,0,0.3);
     opacity: 0.25;
-    transition: all 0.5s;
+    transition: opacity 0.5s, top 0.25s;
     cursor: default;
 }
 #page #timer:hover {
 	opacity: 1;
 }
+#page #timer .back,
+#page #timer .forward {
+    position: absolute;
+    top: 0px;
+    width: 28px;
+    bottom: 0px;
+    background: #222;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    background-position: 50% 40%;
+}
+#page #timer .back {
+    left: -28px;
+	background-image: url("img/rewind_back.png");
+    border-bottom-left-radius: 5px;
+}
+#page #timer .forward {
+    right: -28px;
+	background-image: url("img/rewind_forward.png");
+    border-bottom-right-radius: 5px;
+}
+
+
+
+#page #timeline {
+    background: #2c3e50;
+    width: 100%;
+    height: 20px;
+    border: 10px solid white;
+    box-sizing: border-box;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: calc(100% - 10px);
+    border-radius: 0px 0px 4px 4px;
+    border-top: 2px solid white;
+    transition: all 0.25s;
+    cursor: pointer;
+    z-index: 50;
+}
+#page #timeline .line {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 0%;
+    background: #8e44ad;
+}
+
+
+
+
+
 
 #menu {
 	width: 500px;
@@ -84,6 +146,7 @@ input, textarea, button {
 	color: white;
 	width: 100%;
 	position: absolute;
+	box-sizing: border-box;
 	left: 0px;
 	right: 0px;
 	top: 0px;
@@ -135,12 +198,43 @@ input, textarea, button {
     margin-top: 5px;
 }
 
+#menu #volume {
+    position: absolute;
+    right: -20px;
+    top: 65px;
+    bottom: 10px;
+    ing-mode: bt-lr;
+    width: 70px;
+    height: 20px;
+    -webkit-appearance: none !important;
+    transform: rotate(270deg);
+}
 
+#menu #volume::-webkit-slider-thumb {
+	-webkit-appearance: none !important;
+	background: #e1e1e1;
+	box-shadow: 0px 1px 6px rgba(0,0,0,0.25);
+	border-radius: 100%;
+	width: 16px;
+	height: 16px;
+	border: 1px solid rgba(0,0,0,0.1);
+	margin-top: -6px;
+}
+
+#menu #volume::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+
+  background: #eee;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
 
 
 
 #chat {
-	width: 200px;
+	width: 230px;
 	height: 22px;
 	position: fixed;
 	background: white;
@@ -152,9 +246,10 @@ input, textarea, button {
 	transition: all 0.5s;
 	text-align: center;
 	overflow: hidden;
+	z-index: 100;
 }
 #chat.active {
-	height: 350px;
+	height: 400px;
 }
 #chat .header {
 	margin: -10px;
@@ -164,6 +259,7 @@ input, textarea, button {
 	cursor: pointer;
 	z-index: 10;
 	position: relative;
+	box-sizing: border-box;
 }
 #chat.active .header {margin-bottom: 10px;}
 #chat .header .new {
@@ -204,12 +300,15 @@ input, textarea, button {
     overflow-x: hidden;
 }
 #chat .messages div {
-	padding: 5px;
-	border-bottom: 1px solid rgba(0,0,0,0.05);
-	text-align: left;
-	font-size: 11px;
-	font-weight: 400;
-	color: #333;
+    padding: 5px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    text-align: left;
+    font-size: 11px;
+    font-weight: 400;
+    color: #333;
+    word-wrap: break-word;
+    white-space: normal;
+    word-break: break-all;
 }
 #chat .messages div b {
 	font-weight: 600;
@@ -217,19 +316,22 @@ input, textarea, button {
 #chat .messages div:nth-child(even) {
 	background: rgba(0,0,0,0.025);
 }
-#chat .messages div.join {
-	background: #e67e22;
+#chat .messages div.join,
+#chat .messages div.disc,
+#chat .messages div.rewind {
 	color: white;
 	text-align: center;
     border-radius: 4px;
     margin: 3px;
 }
+#chat .messages div.join {
+	background: #e67e22;
+}
 #chat .messages div.disc {
 	background: #34495e;
-	color: white;
-	text-align: center;
-    border-radius: 4px;
-    margin: 3px;
+}
+#chat .messages div.rewind {
+	background: #16a085;
 }
 
 

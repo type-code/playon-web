@@ -9,6 +9,16 @@ var video = null;
 var delta = 0.5;
 var nick = localStorage.nick;
 var new_messages = 0;
+var window_blur = false;
+var window_title = document.title;
+
+window.onblur = function() {window_blur = true;}
+window.onfocus = function() {
+	window_blur = false;
+	document.title = window_title;
+	if ( $("#chat").hasClass("active") )
+		new_messages = 0;
+}
 
 if (nick != undefined) {
 
@@ -19,6 +29,8 @@ if (nick != undefined) {
 			width: '854',
 			events: {
 				'onReady': function(){
+					$("#player").attr("width", "100%");
+					$("#player").attr("height", "100%");
 					socket_init();
 				}
 			}
@@ -63,9 +75,11 @@ function socket_init() {
 		if (data.video != video)
 			player.loadVideoById(data.video, data.time);
 		else {
-			player.seekTo(data.time);
+			player.seekTo(data.time, true);
 			player.playVideo();
 		}
+
+		console.log(data.video, video);
 	});
 
 	socket.on("stop", function(time){
@@ -80,15 +94,19 @@ function socket_init() {
 		///
 	});
 
+	socket.on("rewind", function(data){
+		var nick = data.nick;
+		var second = data.second;
+
+		player.seekTo(second, true);
+		system_message(data);
+	});
+
 	socket.on("message", function(data){
 		var nick = data.nick;
 		var text = data.text;
 		var msg = `<div><b>${nick}:</b> ${text}</div>`;
 		$("#chat .messages").append(msg);
-
-		$("#chat .messages").animate({
-        	scrollTop: $("#chat .messages")[0].scrollHeight
-        }, "fast");
 
         // CHECK READED MESAGES
         new_messages_check();
@@ -102,16 +120,21 @@ function socket_init() {
 		var type = data.type
 		var text;
 
-		if (type == "join") text = `${nick} joined us...`;
-		if (type == "disc") text = `${nick} disconnected...`;
+		if (type == "join") {
+			text = `<b>${nick}</b> joined us...`;
+		}
+		if (type == "disc") {
+			text = `<b>${nick}</b> disconnected...`;
+		}
+		if (type == "rewind") {
+			var time = formatTime(data.second);
+			text = `${nick} rewind to <b>${time}</b>`;
+		}
 
 		var msg = `<div class="${type}">${text}</div>`;
 		$("#chat .messages").append(msg);
 
 		new_messages_check();
-		$("#chat .messages").animate({
-        	scrollTop: $("#chat .messages")[0].scrollHeight
-        }, "fast");
 	}
 
 	function new_messages_check() {
@@ -120,6 +143,17 @@ function socket_init() {
         	$("#chat .header .new").show();
         	$("#chat .header .new").html(new_messages);
         }
+        else {
+        	if (window_blur) new_messages++;
+        }
+
+        if (window_blur) {
+        	document.title = `(${new_messages}) - ${window_title}`;
+        }
+
+        $("#chat .messages").animate({
+        	scrollTop: $("#chat .messages")[0].scrollHeight
+        }, "fast");
 	}
 
 	/////////////////////////////////////////////
@@ -160,6 +194,31 @@ function socket_init() {
 		return false;
 	});
 
+	$("#timeline").click(function(event){
+		var x = event.offsetX;
+		var max_x = $("#timeline").width();
+		if (x > max_x) x = max_x;
+
+		var duration = player.getDuration();
+		var rewind_percent = x / max_x;
+		var rewind_seconds = duration * rewind_percent;
+
+		socket.emit("rewind", {second: rewind_seconds, nick});
+	});
+
+	$("#timer .back").click(function(){
+		var second = player.getCurrentTime() - 10;
+		if (second < 0) second = 0;
+		socket.emit("rewind", {second, nick});
+	});
+
+	$("#timer .forward").click(function(){
+		var duration = player.getDuration();
+		var second = player.getCurrentTime() + 10;
+		if (second > duration) second = duration;
+		socket.emit("rewind", {second, nick});
+	});
+
 	$("#volume").change(changeVolume);
 	$("#volume").mousemove(changeVolume);
 
@@ -170,10 +229,15 @@ function socket_init() {
 
 
 	setInterval(function(){
-		var current = formatTime(player.getCurrentTime());
-		var duration = formatTime(player.getDuration());
+		var current_clear = player.getCurrentTime();
+		var duration_clear = player.getDuration();
+		var current = formatTime(current_clear);
+		var duration = formatTime(duration_clear);
 		$("#timer .current").html(current);
 		$("#timer .duration").html(duration);
+
+		var dir = (current_clear / duration_clear) * 100;
+		$("#timeline .line").css("width", dir+"%");
 	}, 500);
 
 
@@ -191,8 +255,13 @@ function socket_init() {
 
 
 $("#loader input").keyup(function(event){
+	var nick = $(this).val();
+	if (nick.length > 11) {
+		nick = nick.substr(0, 11);
+		$(this).val(nick);
+	}
+
 	if (event.keyCode == 13) {
-		var nick = $(this).val();
 		localStorage.nick = nick;
 		document.location.reload();
 	}
