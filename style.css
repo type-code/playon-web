@@ -4,6 +4,7 @@ body, html {
 	font-family: "Open Sans", Roboto, Calibri, Arial;
 	background: #eee;
 	height: 100%;
+	transition: all 1s;
 }
 body {
 	display: flex;
@@ -24,6 +25,7 @@ input, textarea, button {
 	padding: 10px;
 	padding-bottom: 2px;
 	position: relative;
+	transition: all 0.25s;
 }
 #page:hover > #timeline {
 	height: 30px;
@@ -31,6 +33,11 @@ input, textarea, button {
 }
 #page:hover > #timer {
 	top: calc(100% + 20px);
+}
+#page.p720 {
+	width: 1280px;
+	height: 720px;
+    margin-top: -120px;
 }
 
 #page #player {
@@ -115,6 +122,27 @@ input, textarea, button {
     width: 0%;
     background: #8e44ad;
 }
+#page #timeline .time {
+	display: none;
+    position: absolute;
+    top: -20px;
+    padding: 1px 10px;
+    background: #2c3e50;
+    color: white;
+    font-size: 12px;
+    left: 0px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    border: 1px solid #1f1e1e;
+    border-bottom: none;
+    /*border-radius: 8px 8px 0px 0px;*/
+    font-weight: 300;
+    opacity: 0.75;
+}
+#page #timeline:hover .time {
+	display: block;
+	opacity: 1;
+}
 
 
 
@@ -134,6 +162,7 @@ input, textarea, button {
 	text-align: center;
 	overflow: hidden;
 	padding-top: 45px;
+	z-index: 1000;
 }
 #menu:hover {
 	bottom: 0px;
@@ -212,7 +241,7 @@ input, textarea, button {
 
 #menu #volume::-webkit-slider-thumb {
 	-webkit-appearance: none !important;
-	background: #e1e1e1;
+	background: #eee;
 	box-shadow: 0px 1px 6px rgba(0,0,0,0.25);
 	border-radius: 100%;
 	width: 16px;
@@ -226,10 +255,70 @@ input, textarea, button {
   height: 6px;
   cursor: pointer;
 
-  background: #eee;
+  background: #ccc;
   border: 1px solid rgba(0,0,0,0.1);
   border-radius: 4px;
 }
+
+
+#menu #light {
+	position: absolute;
+    left: 10px;
+    top: 45px;
+    background: #dedede;
+    height: 65px;
+    width: 26px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    padding: 3px;
+    border-radius: 100px;
+    cursor: pointer;
+}
+#menu #light.dark > .pointer {
+	background: #333;
+    top: 34px;
+}
+#menu #light .pointer {
+	width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 100%;
+    transition: all 0.5s;
+    position: relative;
+    top: 0px;
+    border: 1px solid rgba(0,0,0,0.3);
+    box-sizing: border-box;
+}
+
+
+#menu #quality {
+	position: absolute;
+    left: 50px;
+    top: 45px;
+    width: 45px;
+    height: initial;
+}
+#menu #quality div {
+	display: block;
+    width: 100%;
+    height: initial;
+    padding: 2px 10px;
+    background: #eee;
+    margin: 3px;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 100px;
+    font-weight: 300;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+#menu #quality div.active {
+	background: #2980b9;
+	color: white;
+}
+
+
+
+
 
 
 
@@ -292,12 +381,13 @@ input, textarea, button {
 }
 
 #chat .messages {
-	height: 80%;
+    height: calc(100% - 70px);
 	background: #f5f5f5;
 	border: 1px solid rgba(0,0,0,0.1);
 	border-bottom: none;
     overflow: auto;
     overflow-x: hidden;
+    color: #333;
 }
 #chat .messages div {
     padding: 5px;
@@ -305,11 +395,20 @@ input, textarea, button {
     text-align: left;
     font-size: 11px;
     font-weight: 400;
-    color: #333;
     word-wrap: break-word;
     white-space: normal;
     word-break: break-all;
+    padding-left: 5px;
+    transition: all 0.5s;
+    position: relative;
+    left: 0px;
 }
+
+#chat .messages div.new {
+	left: 100% !important;
+	transition: none;
+}
+
 #chat .messages div b {
 	font-weight: 600;
 }
@@ -318,6 +417,8 @@ input, textarea, button {
 }
 #chat .messages div.join,
 #chat .messages div.disc,
+#chat .messages div.load,
+#chat .messages div.pause,
 #chat .messages div.rewind {
 	color: white;
 	text-align: center;
@@ -325,13 +426,39 @@ input, textarea, button {
     margin: 3px;
 }
 #chat .messages div.join {
-	background: #e67e22;
+	background: #8e44ad;
 }
 #chat .messages div.disc {
 	background: #34495e;
 }
 #chat .messages div.rewind {
 	background: #16a085;
+}
+#chat .messages div.load {
+	background: #2980b9;
+}
+#chat .messages div.pause {
+	background: #e67e22;
+}
+
+#chat .messages div img {    
+	height: 20px;
+    vertical-align: top;
+    margin: -2px 1px;
+    transition: all 0.25s;
+}
+#chat .messages div img:hover {
+	padding: 5px;
+    margin: -7px -4px;
+	background: white;
+	border-radius: 4px;
+	transform: scale(2);
+	box-shadow: 0px 0px 20px rgba(0,0,0,0.35);
+}
+#chat .messages div ul {
+	padding: 0px;
+    margin: 0px;
+    padding-left: 20px;
 }
 
 
@@ -362,7 +489,17 @@ input, textarea, button {
 	background: rgba(0, 0, 0, 0.05);
 }
 #chat .messages:hover::-webkit-scrollbar-thumb {
-	background: rgba(0, 0, 0, 0.1);
+	background: rgba(0, 0, 0, 0.15);
+}
+
+
+@keyframes message {
+	0%: {
+		left: 100%;
+	}
+	100%: {
+		left: 0%;
+	}	
 }
 
 
