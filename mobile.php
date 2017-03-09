@@ -8,9 +8,8 @@
 	<meta http-equiv="Expires" content="Wed, 26 Feb 1999 08:21:57 GMT">
 	<link rel="shortcut icon" href="favicon.ico" />
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&amp;subset=cyrillic" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="style.css?<?=$cache;?>">
-	<script src="youtube_api.js"></script>
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script src="https://www.youtube.com/iframe_api"></script>
 	<script src="socket.io.js"></script>
 </head>
 <body>

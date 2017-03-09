@@ -7,10 +7,11 @@ var socket = null;
 var player = null;
 var video = null;
 var delta = 0.5;
-var nick = localStorage.nick;
+var nick = localStorage.player_nick;
 var new_messages = 0;
 var window_blur = false;
 var window_title = document.title;
+var connetion_step = 0;
 
 window.onblur = function() {window_blur = true;}
 window.onfocus = function() {
@@ -20,40 +21,54 @@ window.onfocus = function() {
 		new_messages = 0;
 }
 
-if (nick != undefined && nick != "") {
 
+//function onYouTubeIframeAPIReady() {
+//$(document).ready(function(){
 	function onYouTubeIframeAPIReady() {
-	   	player = new YT.Player('player', {
-			height: '480',
-			playerVars: { 'autoplay': 0, 'controls': 0, 'showinfo': 0, 'rel': 0},
-			width: '854',
-			events: {
-				'onReady': function(){
-					player.setVolume("50");
-					$("#player").attr("width", "100%");
-					$("#player").attr("height", "100%");
-					socket_init();
-				}
-			}
-		});
-	}
+		if (nick != undefined && nick != "") {
+			connetion_step = 1;
+			player = new YT.Player('player', {
+				height: '480',
+				playerVars: { 
+					'iv_load_policy': 3,
+					'autoplay': 0, 
+					'controls': 0, 
+					'showinfo': 0, 
+					'rel': 0
+				},
+				width: '854',
+				events: {
+					'onReady': function(){
+						if (localStorage.player_volume == undefined)
+							localStorage.player_volume = 50;
 
-}
-else {
-	console.log("Enter you NickName!");
-	$("#loader").fadeIn("slow");
-	$("#loader").css("display", "flex");
-}
+						player.setVolume(localStorage.player_volume);
+						$("#volume").val(localStorage.player_volume);
+
+						$("#player").attr("width", "100%");
+						$("#player").attr("height", "100%");
+						socket_init();
+					}
+				}
+			});
+	   }
+		else {
+			console.log("Enter you Nick!");
+			$("#loader").fadeIn("slow");
+			$("#loader").css("display", "flex");
+		}
+	}
+//});
+//}
 
 
 
 
 function socket_init() {
 	var host = document.location.origin;
-	var socket = io(host + ":8080/");
+	socket = io(host + ":8080/");
 
 	socket.on("connected", function(data){
-		console.log(data);
 		var video_url = data.video;
 		var time = data.time;
 		var play = data.play;
@@ -119,8 +134,9 @@ function socket_init() {
 		setTimeout(function(){
 			$(".messages .new").removeClass("new");
 		}, 5);
-        // CHECK READED MESAGES
-        new_messages_check();
+
+		// CHECK READED MESAGES
+		new_messages_check();
 	});
 
 	socket.on("light", function(data){
@@ -191,21 +207,22 @@ function socket_init() {
 
 	function new_messages_check() {
 		if ( !$("#chat").hasClass("active") ) {
-        	new_messages++;
-        	$("#chat .header .new").show();
-        	$("#chat .header .new").html(new_messages);
-        }
-        else {
-        	if (window_blur) new_messages++;
-        }
+			new_messages++;
+			$("#chat .header .new").show();
+			$("#chat .header .new").html(new_messages);
+		}
+		else {
+			if (window_blur) new_messages++;
+		}
 
-        if (window_blur) {
-        	document.title = `(${new_messages}) - ${window_title}`;
-        }
+		if (window_blur) {
+			document.title = `(${new_messages}) - ${window_title}`;
+		}
+	
 
-        $("#chat .messages").animate({
-        	scrollTop: $("#chat .messages")[0].scrollHeight
-        }, "fast");
+		$("#chat .messages").animate({
+			scrollTop: $("#chat .messages")[0].scrollHeight
+		}, "fast");
 	}
 
 	function checkSmiles(text) {
@@ -222,6 +239,7 @@ function socket_init() {
 		text = text.replace(/Niger/g, "<img src='img/s/niger.png'>");
 		text = text.replace(/Ninja/g, "<img src='img/s/ninja.png'>");
 		text = text.replace(/Vedro/g, "<img src='img/s/vedro.png'>");
+		text = text.replace(/Pezda/g, "<img src='img/s/pezda.png'>");
 		text = text.replace(/Ogre/g, "<img src='img/s/ogre.png'>");
 		text = text.replace(/Kaef/g, "<img src='img/s/kaef.png'>");
 		text = text.replace(/Girl/g, "<img src='img/s/girl.png'>");
@@ -256,7 +274,7 @@ function socket_init() {
 		}
 	});
 
-	$("#chat input").keyup(function(event){
+	$("#chat input").keydown(function(event){
 		if (event.keyCode == 13 && $(this).val().length > 0) {
 			var text = $(this).val();
 
@@ -269,7 +287,7 @@ function socket_init() {
 	$("#chat .header .setup").click(function(){
 		$("#loader").css("display", "flex");
 		$("#loader").fadeIn("slow");
-		$("#loader input").val(localStorage.nick);
+		$("#loader input").val(localStorage.player_nick);
 		return false;
 	});
 
@@ -296,7 +314,7 @@ function socket_init() {
 		var rewind_percent = x / max_x;
 		var rewind_seconds = Math.floor(duration * rewind_percent);
 		var rewind_time = formatTime(rewind_seconds);
-		var rewind_position = (rewind_percent * max_x) - 20;
+		var rewind_position = (rewind_percent * max_x) - 35;
 
 		if (x >= 0 && x < max_x && y > 1 && y < 24) {
 			$(this).find(".time").css("left", rewind_position + "px");
@@ -325,6 +343,7 @@ function socket_init() {
 	function changeVolume() {
 		var volume = $("#volume").val();
 		player.setVolume(String(volume));
+		localStorage.player_volume = volume;
 	};
 
 	$('#page').bind('mousewheel', function(e){
@@ -341,6 +360,7 @@ function socket_init() {
 		if (newVolume > 100) newVolume = 100;
 		$("#volume").val(newVolume);
 		player.setVolume(String(newVolume));
+		localStorage.player_volume = newVolume;
 
 		//prevent page fom scrolling
 		return false;
@@ -370,7 +390,7 @@ function socket_init() {
 		$("#timer .duration").html(duration);
 
 		var dir = (current_clear / duration_clear) * 100;
-		$("#timeline .line").css("width", dir+"%");
+		$("#timeline .line").css("width", dir + "%");
 	}, 500);
 
 
@@ -408,9 +428,11 @@ $("#loader input").keyup(function(event){
 	}
 
 	if (event.keyCode == 13) {
-		localStorage.nick = nick;
+		localStorage.player_nick = nick;
 		document.location.reload();
 	}
+
+	return false;
 });
 
 $("#chat .header").click(function(){
@@ -420,11 +442,59 @@ $("#chat .header").click(function(){
 	$("#chat .header .new").fadeOut("slow");
 });
 
+$("#chat .header .new").click(function(){
+	new_messages = 0;
+	$("#chat .header .new").html(new_messages);
+	$("#chat .header .new").fadeOut("slow");
+	return false;
+});
 
-function fullScreen() {
+
+//////////////////////////////
+// 	 PAGE KEYBOARD EVENTS 	//
+//////////////////////////////
+
+$(document).keydown(function(event){
+	var loader_focus = $("#loader input").is(":focus");
+	var chat_open = $("#chat").hasClass("active");
+	var chat_focus = $("#chat input").is(":focus");
+
+	if (event.keyCode == 13 && loader_focus == false) {
+		$("#chat input").focus();
+		if (chat_open == false) {
+			new_messages = 0;
+			$("#chat .header .new").html(new_messages);
+			$("#chat .header .new").fadeOut("slow");
+			$("#chat").addClass("active");
+		}
+	}
+
+	if (event.keyCode == 27 && chat_open) {
+		 $("#chat").removeClass("active");
+		 $("#chat input").blur();
+	}
+});
+
+
+/*function fullScreen() {
 	$("#page").css({"width": "100%", "height": "100%", "marginTop": "0px"}); 
 	$("#page #timer").css("top", "15px").css("zIndex", "9999999");
 	$("body").css("overflow", "hidden");
 	$("#page #timeline").css({"zIndex": "99999", "marginTop": "-4px"});
 	//$("#menu").css("bottom", "-90px");
-}
+}*/
+
+$(document).ready(function(){
+	//document.location.reload();
+	//socket_init();
+	setTimeout(function(){
+		if (player == null)
+			onYouTubeIframeAPIReady();
+
+		setTimeout(function(){
+			if ((socket == null || player == null) && (localStorage.player_nick != undefined) && connetion_step == 0) 
+			alert("Connection error... Reload page!\rIf reload not help - press CTRL + F5");
+			//document.location.reload();
+		}, 2000);
+	}, 2000);
+});
