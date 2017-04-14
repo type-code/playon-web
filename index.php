@@ -47,10 +47,38 @@
 		<input type="range" id="volume" min="0" max="100" step="1">
 	</div>
 
+	<div id="playlist">
+		<div class="header">Playlist:</div>
+		<div class="list">
+			<div class="item">
+				<img src="img/EXAMPLE.jpg">
+				<div class="info">
+					<span class="name" title="">Dota2 - WTF Moments 220</span>
+					<span class="chanel">by <b>DotaWTF</b></span>
+				</div>
+			</div>
+			<div class="item">
+				<img src="img/EXAMPLE.jpg">
+				<div class="info">
+					<span class="name" title="">Dota2 - WTF Moments 220</span>
+					<span class="chanel">by <b>DotaWTF</b></span>
+				</div>
+			</div>
+			<div class="item">
+				<img src="img/EXAMPLE.jpg">
+				<div class="info">
+					<span class="name" title="">Dota2 - WTF Moments 220</span>
+					<span class="chanel">by <b>DotaWTF</b></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="chat">
 		<div class="header">
-			<div class="new">0</div>
-			<div class="setup"></div>
+			<div class="new" title="New Messages">0</div>
+			<div class="big" title="Big Chat Mode"></div>
+			<div class="setup" title="Setup"></div>
 			Chat:
 		</div>
 		<div class="messages"></div>
@@ -60,7 +88,11 @@
 	<div id="loader">
 		<div>
 			<h1>Enter you nickname:</h1>
-			<input type="text" class="nickname">
+			<div class="inputs">
+				<input type="text" class="nickname">
+				<input type="color" class="color">
+			</div>
+			<button>CANCEL</button>
 		</div>
 	</div>
 

@@ -43,7 +43,7 @@ a {
 #page.p720 {
 	width: 1280px;
 	height: 720px;
-    margin-top: -120px;
+	margin-top: -120px;
 }
 
 #page #player {
@@ -60,93 +60,93 @@ a {
 }
 
 #page #timer {
-    position: absolute;
-    width: 100px;
-    height: 27px;
-    background: #444;
-    color: white;
-    text-align: center;
-    line-height: 1.8;
-    left: calc(50% - 50px);
-    top: calc(100% + 10px);
-    font-size: 14px;
-    font-weight: 300;
-    box-shadow: 0px 4px 55px rgba(0,0,0,0.3);
-    opacity: 0.25;
-    transition: opacity 0.5s, top 0.25s;
-    cursor: default;
+	position: absolute;
+	width: 100px;
+	height: 27px;
+	background: #444;
+	color: white;
+	text-align: center;
+	line-height: 1.8;
+	left: calc(50% - 50px);
+	top: calc(100% + 10px);
+	font-size: 14px;
+	font-weight: 300;
+	box-shadow: 0px 4px 55px rgba(0,0,0,0.3);
+	opacity: 0.25;
+	transition: opacity 0.5s, top 0.25s;
+	cursor: default;
 }
 #page #timer:hover {
 	opacity: 1;
 }
 #page #timer .back,
 #page #timer .forward {
-    position: absolute;
-    top: 0px;
-    width: 28px;
-    bottom: 0px;
-    background: #313131;
-    cursor: pointer;
-    background-repeat: no-repeat;
-    background-size: 18px;
-    background-position: 50% 40%;
+	position: absolute;
+	top: 0px;
+	width: 28px;
+	bottom: 0px;
+	background: #313131;
+	cursor: pointer;
+	background-repeat: no-repeat;
+	background-size: 18px;
+	background-position: 50% 40%;
 }
 #page #timer .back {
-    left: -28px;
+	left: -28px;
 	background-image: url("img/rewind_back.png");
-    border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
 }
 #page #timer .forward {
-    right: -28px;
+	right: -28px;
 	background-image: url("img/rewind_forward.png");
-    border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
 
 
 #page #timeline {
-    background: #2c3e50;
-    width: 100%;
-    height: 20px;
-    border: 10px solid white;
-    box-sizing: border-box;
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    top: calc(100% - 10px);
-    border-radius: 0px 0px 4px 4px;
-    border-top: 2px solid white;
-    transition: all 0.25s;
-    cursor: pointer;
-    z-index: 50;
+	background: #2c3e50;
+	width: 100%;
+	height: 20px;
+	border: 10px solid white;
+	box-sizing: border-box;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: calc(100% - 10px);
+	border-radius: 0px 0px 4px 4px;
+	border-top: 2px solid white;
+	transition: all 0.25s;
+	cursor: pointer;
+	z-index: 50;
 }
 #page #timeline .line {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    bottom: 0px;
-    width: 0%;
-    background: #8e44ad;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 0%;
+	background: #8e44ad;
 }
 #page #timeline .time {
 	display: none;
-    position: absolute;
-    top: -27px;
-    padding: 4px 15px;
-    background: #333;
-    width: 70px;
-    box-sizing: border-box;
-    text-align: center;
-    color: white;
-    font-size: 12px;
-    left: 0px;
-    opacity: 0;
-    transition: opacity 0.5s;
-    border: 1px solid rgba(0,0,0,0.3);
-    border-bottom: none;
-    border-radius: 3px 3px 0px 0px;*/
-    font-weight: 300;
-    opacity: 0.8;
+	position: absolute;
+	top: -27px;
+	padding: 4px 15px;
+	background: #333;
+	width: 70px;
+	box-sizing: border-box;
+	text-align: center;
+	color: white;
+	font-size: 12px;
+	left: 0px;
+	opacity: 0;
+	transition: opacity 0.5s;
+	border: 1px solid rgba(0,0,0,0.3);
+	border-bottom: none;
+	border-radius: 3px 3px 0px 0px;*/
+	font-weight: 300;
+	opacity: 0.8;
 }
 #page #timeline:hover .time {
 	display: block;
@@ -200,13 +200,13 @@ a {
 	height: 70px;
 	text-align: center;
 	color: white;
-    box-shadow: 0px 3px 5px rgba(0,0,0,0.2);
-    border-bottom: 5px solid rgba(0,0,0,0.2);
-    cursor: pointer;
+	box-shadow: 0px 3px 5px rgba(0,0,0,0.2);
+	border-bottom: 5px solid rgba(0,0,0,0.2);
+	cursor: pointer;
 
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 40px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 40px;
 }
 
 #menu div:not(.header) {
@@ -231,21 +231,21 @@ a {
 }
 
 #menu button:active {
-    border-bottom: none;
-    height: 65px;
-    margin-top: 5px;
+	border-bottom: none;
+	height: 65px;
+	margin-top: 5px;
 }
 
 #menu #volume {
-    position: absolute;
-    right: -20px;
-    top: 65px;
-    bottom: 10px;
-    ing-mode: bt-lr;
-    width: 70px;
-    height: 20px;
-    -webkit-appearance: none !important;
-    transform: rotate(270deg);
+	position: absolute;
+	right: -20px;
+	top: 65px;
+	bottom: 10px;
+	ing-mode: bt-lr;
+	width: 70px;
+	height: 20px;
+	-webkit-appearance: none !important;
+	transform: rotate(270deg);
 }
 
 #menu #volume::-webkit-slider-thumb {
@@ -272,54 +272,54 @@ a {
 
 #menu #light {
 	position: absolute;
-    left: 10px;
-    top: 45px;
-    background: #dedede;
-    height: 65px;
-    width: 26px;
-    border: 1px solid rgba(0,0,0,0.1);
-    box-sizing: border-box;
-    padding: 3px;
-    border-radius: 100px;
-    cursor: pointer;
+	left: 10px;
+	top: 45px;
+	background: #dedede;
+	height: 65px;
+	width: 26px;
+	border: 1px solid rgba(0,0,0,0.1);
+	box-sizing: border-box;
+	padding: 3px;
+	border-radius: 100px;
+	cursor: pointer;
 }
 #menu #light.dark > .pointer {
 	background: #333;
-    top: 34px;
+	top: 32px;
 }
 #menu #light .pointer {
 	width: 18px;
-    height: 18px;
-    background: white;
-    border-radius: 100%;
-    transition: all 0.5s;
-    position: relative;
-    top: 0px;
-    border: 1px solid rgba(0,0,0,0.3);
-    box-sizing: border-box;
+	height: 18px;
+	background: white;
+	border-radius: 100%;
+	transition: all 0.5s;
+	position: relative;
+	top: 0px;
+	border: 1px solid rgba(0,0,0,0.3);
+	box-sizing: border-box;
 }
 
 
 #menu #quality {
 	position: absolute;
-    left: 50px;
-    top: 40px;
-    width: 45px;
-    height: initial;
+	left: 50px;
+	top: 40px;
+	width: 45px;
+	height: initial;
 }
 #menu #quality div {
 	display: block;
-    width: 100%;
-    height: initial;
-    padding: 1px 10px;
-    font-size: 12px;
-    background: #ddd;
-    margin: 3px;
-    border: 1px solid rgba(0,0,0,0.05);
-    border-radius: 100px;
-    font-weight: 300;
-    transition: all 0.5s;
-    cursor: pointer;
+	width: 100%;
+	height: initial;
+	padding: 1px 10px;
+	font-size: 12px;
+	background: #ddd;
+	margin: 3px;
+	border: 1px solid rgba(0,0,0,0.05);
+	border-radius: 100px;
+	font-weight: 300;
+	transition: all 0.5s;
+	cursor: pointer;
 }
 #menu #quality div.active {
 	background: #2980b9;
@@ -350,6 +350,12 @@ a {
 #chat.active {
 	height: 400px;
 }
+#chat.big {
+	width: 270px;
+}
+#chat.big.active {
+	height: 500px;
+}
 #chat .header {
 	margin: -10px;
 	padding: 10px;
@@ -362,16 +368,16 @@ a {
 }
 #chat.active .header {margin-bottom: 10px;}
 #chat .header .new {
-    position: absolute;
-    left: 10px;
-    top: calc(50% - 12px);
-    border-radius: 200px;
-    background: #8e44ad;
-    width: 25px;
-    height: 25px;
-    line-height: 2.2;
-    font-size: 11px;
-    display: none;
+	position: absolute;
+	left: 10px;
+	top: calc(50% - 12px);
+	border-radius: 200px;
+	background: #8e44ad;
+	width: 25px;
+	height: 25px;
+	line-height: 2.2;
+	font-size: 11px;
+	display: none;
 }
 #chat .header .setup {
 	position: absolute;
@@ -390,28 +396,56 @@ a {
 	transform: scale(1.25);
 }
 
+#chat .header .big {
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	right: 45px;
+	top: calc(50% - 12px);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	background-image: url("img/big.png");
+	cursor: pointer;
+	transition: all 0.5s;
+	opacity: 0.1;
+	padding: 5px 10px;
+	border-radius: 3px;
+}
+#chat .header .big:hover {
+	transform: scale(1.25);
+}
+#chat .header .big.select {
+	opacity: 1;
+	background-color: rgba(255,255,255,0.1);
+}
+
 #chat .messages {
-    height: calc(100% - 70px);
+	height: calc(100% - 70px);
 	background: #f5f5f5;
 	border: 1px solid rgba(0,0,0,0.1);
 	border-bottom: none;
-    overflow: auto;
-    overflow-x: hidden;
-    color: #333;
+	overflow: auto;
+	overflow-x: hidden;
+	color: #333;
 }
 #chat .messages div {
-    padding: 5px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    text-align: left;
-    font-size: 11px;
-    font-weight: 400;
-    word-wrap: break-word;
-    white-space: normal;
-    word-break: break-all;
-    padding-left: 5px;
-    transition: all 0.5s;
-    position: relative;
-    left: 0px;
+	padding: 5px;
+	border-bottom: 1px solid rgba(0,0,0,0.05);
+	margin-top: 1px;
+	text-align: left;
+	font-size: 11px;
+	font-weight: 400;
+	word-wrap: break-word;
+	white-space: normal;
+	word-break: break-word;
+	padding-left: 5px;
+	transition: all 0.5s;
+	position: relative;
+	left: 0px;
+}
+#chat.big .messages div {
+	font-size: 14px;
 }
 
 #chat .messages div.new {
@@ -427,13 +461,14 @@ a {
 }
 #chat .messages div.join,
 #chat .messages div.disc,
+#chat .messages div.play,
 #chat .messages div.load,
 #chat .messages div.pause,
 #chat .messages div.rewind {
 	color: white;
 	text-align: center;
-    border-radius: 4px;
-    margin: 3px;
+	border-radius: 4px;
+	margin: 3px;
 }
 #chat .messages div.join {
 	background: #8e44ad;
@@ -450,29 +485,34 @@ a {
 #chat .messages div.pause {
 	background: #e67e22;
 }
+#chat .messages div.play {
+	background: #1f9c3b;
+}
 
 #chat .messages div img {    
 	height: 20px;
-    vertical-align: top;
-    margin: -2px 1px;
-    transition: all 0.25s;
-    z-index: 100;
+	vertical-align: top;
+	margin: -2px 1px;
+	transition: all 0.25s;
+	z-index: 100;
 }
 #chat .messages div img:hover {
 	padding: 5px;
 	z-index: 101;
-    margin: -7px -4px;
+	margin: -7px -4px;
 	background: white;
 	border-radius: 4px;
 	transform: scale(2);
 	box-shadow: 0px 0px 20px rgba(0,0,0,0.35);
 }
+#chat.big .messages div img {
+	height: 25px;
+}
 #chat .messages div ul {
 	padding: 0px;
-    margin: 0px;
-    padding-left: 20px;
+	margin: 0px;
+	padding-left: 20px;
 }
-
 
 #chat input {
 	background: #e5e5e5;
@@ -517,6 +557,102 @@ a {
 
 
 
+#playlist {
+	width: 220px;
+	height: 32px;
+	position: fixed;
+	left: 10px;
+	bottom: 10px;
+	background: white;
+	box-shadow: 0px 0px 50px rgba(0,0,0,0.35);
+	border-radius: 4px;
+	padding: 5px;
+	transition: all 0.5s;
+	text-align: center;
+	overflow: hidden;
+	z-index: 100;
+}
+#playlist.active {
+	height: 320px;
+}
+#playlist .header {
+	margin: -5px;
+	padding: 10px;
+	color: white;
+	background: #2c3e50;
+	cursor: pointer;
+	z-index: 10;
+	position: relative;
+	box-sizing: border-box;
+	margin-bottom: 5px;
+}
+body.dark #playlist {
+	background: rgb(31, 30, 30);
+	color: white;
+}
+body.dark #playlist .header {
+	background: #151515;
+}
+#playlist .list {
+	height: 86%;
+}
+#playlist .list .item {
+	font-size: 10px;
+	padding: 5px;
+	border: 1px solid rgba(0,0,0,0.05);
+	cursor: pointer;
+	position: relative;
+	transition: all 0.5s;
+	margin-bottom: 5px;
+}
+body.dark #playlist .list .item {
+	background: rgba(0,0,0,0.1);
+}
+#playlist .list .item img {
+	width: 64px;
+	height: 36px;
+	vertical-align: middle;
+	display: inline-block;
+}
+#playlist .list .item .info {
+	width: 65%;
+	display: inline-block;
+	vertical-align: middle;
+	text-align: left;
+}
+#playlist .list .item .info span {
+	word-wrap: break-word;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 100%;
+	margin-left: 5px;
+	display: block;
+}
+
+#playlist .list .item:hover {
+	/*filter: blur(1px);*/
+}
+#playlist .list .item:hover::after {
+	opacity: 1;
+}
+#playlist .list .item::after {
+	transition: all 0.5s;
+	opacity: 0;
+	content: '';
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: rgba(27, 27, 27, 0.9);
+	background-image: url("img/play_list.png");
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+}
+
+
+
 #loader {
 	position: fixed;
 	top: 0px;
@@ -530,7 +666,7 @@ a {
 	z-index: 100000;
 	display: none;
 }
-#loader div {
+#loader div:not(.inputs) {
 	text-align: center;
 	padding: 40px;
 	background: white;
@@ -542,7 +678,10 @@ a {
 	margin: 0px;
 	margin-bottom: 20px;
 }
-#loader input {
+#loader .inputs {
+	position: relative;
+}
+#loader .nickname {
 	padding: 10px;
 	font-weight: 400;
 	font-family: "Open Sans";
@@ -553,6 +692,31 @@ a {
 	box-sizing: border-box;
 	font-size: 18px;
 	text-align: center;
+}
+#loader .color {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	height: 30px;
+	width: 30px;
+	padding: 2px;
+}
+#loader button {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 8px;
+	border: 1px solid rgba(0,0,0,0.1);
+	border-radius: 3px;
+	margin-top: 10px;
+	font-weight: 100;
+	background: #e74c3c;
+	color: white;
+	display: none;
+	cursor: pointer;
+	transition: all 0.5s;
+}
+#loader button:hover {
+	background: #b73b2f;
 }
 
 
@@ -572,18 +736,18 @@ a {
 }
 
 
-/*
+
 @media only screen and (orientation: portrait) {
 	#page .overflow {
 		display: none;
 	}
-	#page {
+	/*#page {
 		width: 100%;
 		height: 35vh;
 	}
 	#chat {
-	    width: 100%;
-	    right: 0px;
-	    left: 0px;
-	}
-}*/
+		width: 100%;
+		right: 0px;
+		left: 0px;
+	}*/
+}

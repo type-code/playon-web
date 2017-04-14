@@ -12,6 +12,7 @@ var new_messages = 0;
 var window_blur = false;
 var window_title = document.title;
 var connetion_step = 0;
+var MessageSound = new Audio("message.mp3");
 
 window.onblur = function() {window_blur = true;}
 window.onfocus = function() {
@@ -56,6 +57,7 @@ window.onfocus = function() {
 			console.log("Enter you Nick!");
 			$("#loader").fadeIn("slow");
 			$("#loader").css("display", "flex");
+			$("#loader button").hide();
 		}
 	}
 //});
@@ -97,6 +99,8 @@ function socket_init() {
 			player.seekTo(data.time, true);
 			player.playVideo();
 		}
+		data.type = "play";
+		system_message(data);
 	});
 
 	socket.on("pause", function(data){
@@ -127,8 +131,11 @@ function socket_init() {
 		var nick = data.nick;
 		var text = data.text;
 		var date = formatDate(new Date().getTime());
+		var style = `style='border-left: 3px solid ${data.color}'`;
 		text = checkSmiles(text);
-		var msg = `<div title='${date}' class='new'><b>${nick}:</b> ${text}</div>`;
+
+
+		var msg = `<div title='${date}' class='new' ${style}><b>${nick}:</b> ${text}</div>`;
 		$("#chat .messages").append(msg);
 
 		setTimeout(function(){
@@ -146,6 +153,7 @@ function socket_init() {
 
 	function changeLight(light) {
 		if (light == false) {
+			$("body").addClass("dark");
 			$("body").css("background", "#222");
 			$("#page").css("background", "#111");
 			$("#page #timeline").css("borderColor", "#111");
@@ -160,6 +168,7 @@ function socket_init() {
 			$("#menu .header").css("background", "#151515");
 		}
 		else {
+			$("body").removeClass("dark");
 			$("body").removeAttr("style");
 			$("#page").removeAttr("style");
 			$("#page #timeline").removeAttr("style");
@@ -186,6 +195,9 @@ function socket_init() {
 		}
 		if (type == "disc") {
 			text = `<b>${nick}</b> disconnected...`;
+		}
+		if (type == "play") {
+			text = `<b>${nick}</b> played video...`;
 		}
 		if (type == "pause") {
 			text = `<b>${nick}</b> paused video...`;
@@ -217,6 +229,7 @@ function socket_init() {
 
 		if (window_blur) {
 			document.title = `(${new_messages}) - ${window_title}`;
+			MessageSound.play();
 		}
 	
 
@@ -247,6 +260,9 @@ function socket_init() {
 		text = text.replace(/Omg/g, "<img src='img/s/omg.png'>");
 		text = text.replace(/Bro/g, "<img src='img/s/bro.png'>");
 		text = text.replace(/Rip/g, "<img src='img/s/rip.png'>");
+		text = text.replace(/Vac/g, "<img src='img/s/vac.png'>");
+		text = text.replace(/Уво/g, "<img src='img/s/Уво.png'>");
+		text = text.replace(/Лен/g, "<img src='img/s/Лен.png'>");
 
 		return text;
 	}
@@ -277,9 +293,10 @@ function socket_init() {
 	$("#chat input").keydown(function(event){
 		if (event.keyCode == 13 && $(this).val().length > 0) {
 			var text = $(this).val();
+			var color = localStorage.player_color;
 
 			if (text.length > 140) text = text.substr(0, 140);
-			socket.emit("message", {nick, text});
+			socket.emit("message", {nick, text, color});
 			$(this).val('');
 		}
 	});
@@ -287,8 +304,21 @@ function socket_init() {
 	$("#chat .header .setup").click(function(){
 		$("#loader").css("display", "flex");
 		$("#loader").fadeIn("slow");
-		$("#loader input").val(localStorage.player_nick);
+		$("#loader button").show();
+		$("#loader .nickname").val(localStorage.player_nick);
+		$("#loader .color").val(localStorage.player_color);
 		return false;
+	});
+
+	$("#chat .header .big").click(function(){
+		$("#chat").toggleClass("big");
+		$(this).toggleClass("select");
+		return false;
+	});
+
+
+	$("#loader button").click(function(){
+		$("#loader").fadeOut("fast");
 	});
 
 
@@ -378,6 +408,12 @@ function socket_init() {
 		$("#page").addClass(quality);
 		$("#menu #quality div").removeClass("active");
 		$(this).addClass("active");
+
+		if (quality == "full")
+			document.documentElement.webkitRequestFullScreen();
+		else 
+			document.webkitCancelFullScreen();
+
 	});
 
 
@@ -422,6 +458,8 @@ function socket_init() {
 
 $("#loader input").keyup(function(event){
 	var nick = $(this).val();
+	var color = $("#loader .color").val();
+
 	if (nick.length > 11) {
 		nick = nick.substr(0, 11);
 		$(this).val(nick);
@@ -429,6 +467,7 @@ $("#loader input").keyup(function(event){
 
 	if (event.keyCode == 13) {
 		localStorage.player_nick = nick;
+		localStorage.player_color = color;
 		document.location.reload();
 	}
 
@@ -447,6 +486,12 @@ $("#chat .header .new").click(function(){
 	$("#chat .header .new").html(new_messages);
 	$("#chat .header .new").fadeOut("slow");
 	return false;
+});
+
+
+// PLAYLIST
+$("#playlist .header").click(function(){
+	$("#playlist").toggleClass("active");
 });
 
 
