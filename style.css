@@ -615,12 +615,12 @@ body.dark #playlist .list .item {
 }
 #playlist .list .item .image {
 	width: 64px;
-    height: 36px;
-    vertical-align: middle;
-    display: inline-block;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+	height: 36px;
+	vertical-align: middle;
+	display: inline-block;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 #playlist .list .item .info {
 	width: 65%;

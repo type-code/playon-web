@@ -51,7 +51,7 @@
 		<div class="header">Playlist:</div>
 		<div class="list">
 			<div class="item template" data-videoid="">
-				<div class="image" style="background-image: url(img/EXAMPLE.jpg);"></div>
+				<div class="image"></div>
 				<div class="info">
 					<span class="name" title="">Dota2 - WTF Moments 220</span>
 					<span class="channel">by <b>DotaWTF</b></span>

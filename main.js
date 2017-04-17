@@ -147,13 +147,13 @@ function socket_init() {
 	});
 
 	socket.on("playlist", function(data){
-		console.log(data);
+		//console.log(data);
 		$("#playlist .list .item:not(.template)").remove();
 
 		for(var id in data) {
 			var video = data[id];
 			var image_url = `url('${video.thumbnail_url}')`;
-			
+
 			var item = $("#playlist .list .template").clone();
 				item.appendTo("#playlist .list");
 				item.removeClass("template");
