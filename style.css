@@ -22,6 +22,10 @@ a {
 	text-decoration: none;
 }
 
+.template {
+	display: none !important;
+}
+
 #page {
 	width: 854px;
 	height: 480px;
@@ -587,7 +591,7 @@ a {
 	margin-bottom: 5px;
 }
 body.dark #playlist {
-	background: rgb(31, 30, 30);
+	background: rgb(35, 35, 35);
 	color: white;
 }
 body.dark #playlist .header {
@@ -604,15 +608,19 @@ body.dark #playlist .header {
 	position: relative;
 	transition: all 0.5s;
 	margin-bottom: 5px;
+	z-index: 100;
 }
 body.dark #playlist .list .item {
 	background: rgba(0,0,0,0.1);
 }
-#playlist .list .item img {
+#playlist .list .item .image {
 	width: 64px;
-	height: 36px;
-	vertical-align: middle;
-	display: inline-block;
+    height: 36px;
+    vertical-align: middle;
+    display: inline-block;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 #playlist .list .item .info {
 	width: 65%;
@@ -630,26 +638,50 @@ body.dark #playlist .list .item {
 	display: block;
 }
 
-#playlist .list .item:hover {
-	/*filter: blur(1px);*/
-}
-#playlist .list .item:hover::after {
-	opacity: 1;
-}
-#playlist .list .item::after {
-	transition: all 0.5s;
+#playlist .list .item .holder {
 	opacity: 0;
-	content: '';
 	position: absolute;
 	left: 0px;
 	top: 0px;
 	right: 0px;
 	bottom: 0px;
-	background-color: rgba(27, 27, 27, 0.9);
-	background-image: url("img/play_list.png");
+	background-color: rgba(27, 27, 27, 0);
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
+	transition: all 0.5s;
 }
+#playlist .list .item:hover .holder {
+	background-color: rgba(27, 27, 27, 0.9);
+	opacity: 1;
+}
+#playlist .list .item .holder .play {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-image: url("img/play_list.png");
+}
+
+#playlist .list .item .holder .delete {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	bottom: 10px;
+	width: 30px;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-size: contain;
+	background-image: url("img/list_delete.png");
+	opacity: 0.1;
+	transition: all 0.5s;
+}
+#playlist .list .item .holder .delete:hover {
+	opacity: 1;
+}
+
 
 
 

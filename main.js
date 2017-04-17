@@ -146,6 +146,36 @@ function socket_init() {
 		new_messages_check();
 	});
 
+	socket.on("playlist", function(data){
+		console.log(data);
+		$("#playlist .list .item:not(.template)").remove();
+
+		for(var id in data) {
+			var video = data[id];
+			var image_url = `url('${video.thumbnail_url}')`;
+			
+			var item = $("#playlist .list .template").clone();
+				item.appendTo("#playlist .list");
+				item.removeClass("template");
+				item.find(".image").css("backgroundImage", image_url);
+				item.find(".name").html(video.title);
+				item.find(".name").attr("title", video.title);
+				item.find(".channel b").html(video.author_name);
+				item.data("videoid", id);
+				item.attr("title", video.title);
+
+				item.click(function(){
+					var id = $(this).data("videoid");
+					socket.emit("load", {id, nick: localStorage.player_nick});
+				});
+
+				item.find(".delete").click(function(){
+					var id = $(this).parents(".item").data("videoid");
+					socket.emit("playlist_delete", {id});
+				});
+		}
+	});
+
 	socket.on("light", function(data){
 		var light = data.light;
 		changeLight(light);
@@ -219,9 +249,9 @@ function socket_init() {
 
 	function new_messages_check() {
 		if ( !$("#chat").hasClass("active") ) {
-			new_messages++;
 			$("#chat .header .new").show();
 			$("#chat .header .new").html(new_messages);
+			new_messages++;
 		}
 		else {
 			if (window_blur) new_messages++;

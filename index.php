@@ -50,25 +50,15 @@
 	<div id="playlist">
 		<div class="header">Playlist:</div>
 		<div class="list">
-			<div class="item">
-				<img src="img/EXAMPLE.jpg">
+			<div class="item template" data-videoid="">
+				<div class="image" style="background-image: url(img/EXAMPLE.jpg);"></div>
 				<div class="info">
 					<span class="name" title="">Dota2 - WTF Moments 220</span>
-					<span class="chanel">by <b>DotaWTF</b></span>
+					<span class="channel">by <b>DotaWTF</b></span>
 				</div>
-			</div>
-			<div class="item">
-				<img src="img/EXAMPLE.jpg">
-				<div class="info">
-					<span class="name" title="">Dota2 - WTF Moments 220</span>
-					<span class="chanel">by <b>DotaWTF</b></span>
-				</div>
-			</div>
-			<div class="item">
-				<img src="img/EXAMPLE.jpg">
-				<div class="info">
-					<span class="name" title="">Dota2 - WTF Moments 220</span>
-					<span class="chanel">by <b>DotaWTF</b></span>
+				<div class="holder">
+					<div class="play"></div>
+					<div class="delete"></div>
 				</div>
 			</div>
 		</div>
