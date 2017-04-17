@@ -172,6 +172,7 @@ function socket_init() {
 				item.find(".delete").click(function(){
 					var id = $(this).parents(".item").data("videoid");
 					socket.emit("playlist_delete", {id});
+					return;
 				});
 		}
 	});

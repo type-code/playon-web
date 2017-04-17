@@ -599,6 +599,7 @@ body.dark #playlist .header {
 }
 #playlist .list {
 	height: 86%;
+	overflow: auto;
 }
 #playlist .list .item {
 	font-size: 10px;
@@ -675,11 +676,29 @@ body.dark #playlist .list .item {
 	background-position: 50% 50%;
 	background-size: contain;
 	background-image: url("img/list_delete.png");
-	opacity: 0.1;
+	opacity: 0.2;
 	transition: all 0.5s;
 }
 #playlist .list .item .holder .delete:hover {
 	opacity: 1;
+}
+
+
+#playlist .list::-webkit-scrollbar {
+	width: 6px;
+}
+#playlist .list::-webkit-scrollbar-track {
+	background: transparent;
+	transition: all 0.5s;
+}
+#playlist .list::-webkit-scrollbar-thumb {
+	background: transparent;
+}
+#playlist .list:hover::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.05);
+}
+#playlist .list:hover::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.15);
 }
 
 
