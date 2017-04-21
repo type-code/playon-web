@@ -164,9 +164,10 @@ function socket_init() {
 				item.data("video", id);
 				item.attr("title", video.title);
 
-				item.find(".play").click(function(){
-					var id = $(this).data("video");
-					socket.emit("load", {id, nick: localStorage.player_nick});
+				item.find(".play").click(function(e){
+					var id = $(this).parents(".item").data("video");
+					var nick = localStorage.player_nick;
+					socket.emit("load", {id, nick, playlist: true});
 					e.preventDefault();
 					return false;
 				});
@@ -305,10 +306,7 @@ function socket_init() {
 	$("#load").click(function(){
 		var link = prompt("Link to YouTube video:");
 		if (link && link != "") {
-			link = link.replace("https://www.youtube.com/watch?v=", "");
-			link = link.split("&");
-			var id = link[0];
-			socket.emit("load", {id, nick});
+			socket.emit("load", {id: link, nick, playlist: false});
 		}
 	});
 
