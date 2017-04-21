@@ -15,7 +15,6 @@
 </head>
 <body>
 
-
 	<div id="page" class="p480">
 		<div class="overflow"></div>
 		<div id="player"></div>
@@ -32,6 +31,7 @@
 		</div>
 	</div>
 
+
 	<div id="menu">
 		<div class="header">Controll panel</div>
 		<div><button id="play" title="Play Video"></button></div>
@@ -47,14 +47,15 @@
 		<input type="range" id="volume" min="0" max="100" step="1">
 	</div>
 
+
 	<div id="playlist">
 		<div class="header">Playlist:</div>
 		<div class="list">
-			<div class="item template" data-videoid="">
+			<div class="item template" data-video="{{VIDEO_ID}}">
 				<div class="image"></div>
 				<div class="info">
-					<span class="name" title="">Dota2 - WTF Moments 220</span>
-					<span class="channel">by <b>DotaWTF</b></span>
+					<span class="name" title="{{NAME}}">{{NAME}}</span>
+					<span class="channel">by <b>{{CHANNEL}}</b></span>
 				</div>
 				<div class="holder">
 					<div class="play"></div>
@@ -63,6 +64,7 @@
 			</div>
 		</div>
 	</div>
+
 
 	<div id="chat">
 		<div class="header">
@@ -74,6 +76,7 @@
 		<div class="messages"></div>
 		<input type="text">
 	</div>
+
 
 	<div id="loader">
 		<div>

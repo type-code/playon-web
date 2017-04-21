@@ -622,6 +622,7 @@ body.dark #playlist .list .item {
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat;
+    margin-left: -5px;
 }
 #playlist .list .item .info {
 	width: 65%;
@@ -664,6 +665,7 @@ body.dark #playlist .list .item {
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 	background-image: url("img/play_list.png");
+	z-index: 99;
 }
 
 #playlist .list .item .holder .delete {
@@ -678,6 +680,7 @@ body.dark #playlist .list .item {
 	background-image: url("img/list_delete.png");
 	opacity: 0.2;
 	transition: all 0.5s;
+	z-index: 100;
 }
 #playlist .list .item .holder .delete:hover {
 	opacity: 1;

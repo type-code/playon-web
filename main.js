@@ -143,7 +143,7 @@ function socket_init() {
 		}, 5);
 
 		// CHECK READED MESAGES
-		new_messages_check();
+		checkNewMessages();
 	});
 
 	socket.on("playlist", function(data){
@@ -161,18 +161,21 @@ function socket_init() {
 				item.find(".name").html(video.title);
 				item.find(".name").attr("title", video.title);
 				item.find(".channel b").html(video.author_name);
-				item.data("videoid", id);
+				item.data("video", id);
 				item.attr("title", video.title);
 
-				item.click(function(){
-					var id = $(this).data("videoid");
+				item.find(".play").click(function(){
+					var id = $(this).data("video");
 					socket.emit("load", {id, nick: localStorage.player_nick});
+					e.preventDefault();
+					return false;
 				});
 
-				item.find(".delete").click(function(){
-					var id = $(this).parents(".item").data("videoid");
+				item.find(".delete").click(function(e){
+					var id = $(this).parents(".item").data("video");
 					socket.emit("playlist_delete", {id});
-					return;
+					e.preventDefault();
+					return false;
 				});
 		}
 	});
@@ -245,10 +248,10 @@ function socket_init() {
 		var msg = `<div class="${type}" title="${date}">${text}</div>`;
 		$("#chat .messages").append(msg);
 
-		new_messages_check();
+		checkNewMessages();
 	}
 
-	function new_messages_check() {
+	function checkNewMessages() {
 		if ( !$("#chat").hasClass("active") ) {
 			$("#chat .header .new").show();
 			$("#chat .header .new").html(new_messages);
@@ -270,30 +273,18 @@ function socket_init() {
 	}
 
 	function checkSmiles(text) {
-		text = text.replace(/KappaOrange/g, "<img src='img/s/kappaorange.png'>");
-		text = text.replace(/KappaPride/g, "<img src='img/s/kappapride.png'>");
-		text = text.replace(/KappaRoss/g, "<img src='img/s/kappaross.png'>");
-		text = text.replace(/KappaHD/g, "<img src='img/s/kappahd.png'>");
-		text = text.replace(/Facepalm/g, "<img src='img/s/facepalm.png'>");
-		text = text.replace(/Valakas/g, "<img src='img/s/valakas.png'>");
-		text = text.replace(/Kombik/g, "<img src='img/s/kombik.png'>");
-		text = text.replace(/Godzila/g, "<img src='img/s/godzila.png'>");
-		text = text.replace(/Kappa/g, "<img src='img/s/kappa.png'>");
-		text = text.replace(/Keepo/g, "<img src='img/s/keepo.png'>");
-		text = text.replace(/Niger/g, "<img src='img/s/niger.png'>");
-		text = text.replace(/Ninja/g, "<img src='img/s/ninja.png'>");
-		text = text.replace(/Vedro/g, "<img src='img/s/vedro.png'>");
-		text = text.replace(/Pezda/g, "<img src='img/s/pezda.png'>");
-		text = text.replace(/Ogre/g, "<img src='img/s/ogre.png'>");
-		text = text.replace(/Kaef/g, "<img src='img/s/kaef.png'>");
-		text = text.replace(/Girl/g, "<img src='img/s/girl.png'>");
-		text = text.replace(/Rage/g, "<img src='img/s/rage.png'>");
-		text = text.replace(/Omg/g, "<img src='img/s/omg.png'>");
-		text = text.replace(/Bro/g, "<img src='img/s/bro.png'>");
-		text = text.replace(/Rip/g, "<img src='img/s/rip.png'>");
-		text = text.replace(/Vac/g, "<img src='img/s/vac.png'>");
-		text = text.replace(/Уво/g, "<img src='img/s/Уво.png'>");
-		text = text.replace(/Лен/g, "<img src='img/s/Лен.png'>");
+		var smiles = [ 
+			/KappaOrange/g, /KappaPride/g, /KappaRoss/g, /KappaHD/g, /Facepalm/g, /Valakas/g, /Kombik/g, /Godzila/g, /Kappa/g, /Keepo/g, /Niger/g, /Ninja/g, /Vedro/g, /Pezda/g, /Ogre/g, /Kaef/g, /Girl/g, /Rage/g, /Omg/g, /Bro/g, /Rip/g, /Vac/g, /Уво/g, /Лен/g
+		];
+
+		for(var a in smiles) {
+			var smile = smiles[a];
+			var smile_clear = String(smile).replace("/","").replace("/g", "");
+			var smile_lower = smile_clear.toLocaleLowerCase();
+			var file = `<img src='img/s/${smile_lower}.png'>`;
+
+			text = text.replace(smile, file);
+		};
 
 		return text;
 	}
