@@ -177,7 +177,7 @@ a {
 	padding-top: 45px;
 	z-index: 1000;
 }
-#menu:hover {
+#menu:hover, #menu.fix {
 	bottom: 0px;
 }
 #menu .header {
@@ -458,7 +458,7 @@ a {
 }
 
 #chat .messages div b {
-	font-weight: 600;
+	font-weight: 1000;
 }
 #chat .messages div:nth-child(even) {
 	background: rgba(0,0,0,0.025);
@@ -500,7 +500,7 @@ a {
 	transition: all 0.25s;
 	z-index: 100;
 }
-#chat .messages div img:hover {
+#chat .messages div img:not(.big):hover {
 	padding: 5px;
 	z-index: 101;
 	margin: -7px -4px;
@@ -516,6 +516,13 @@ a {
 	padding: 0px;
 	margin: 0px;
 	padding-left: 20px;
+}
+
+#chat .messages div img.big {
+	width: 100px;
+	height: initial;
+	display: block;
+	margin: auto;
 }
 
 #chat input {
@@ -771,6 +778,43 @@ body.dark #playlist .list .item {
 }
 #loader button:hover {
 	background: #b73b2f;
+}
+
+
+
+#changelist_button {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 25px;
+	background-image: url("img/changelist_black.png");
+	/*background-color: rgba(0,0,0,0.025);*/
+	border-radius: 100%;
+	border: 1px solid rgba(0,0,0,0.1);
+	background-color: white;
+	box-shadow: 0px 5px 30px rgba(0,0,0,0.25);
+}
+.dark #changelist_button {
+	background-color: #151515;
+	background-image: url("img/changelist_white.png");
+}
+body #changelist_button.new {
+	animation: new_change 1s infinite alternate;
+	background-color: #f39c12;
+}
+
+@keyframes new_change {
+	0% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(1.25);
+	}
 }
 
 

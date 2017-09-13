@@ -13,6 +13,7 @@ var window_blur = false;
 var window_title = document.title;
 var connetion_step = 0;
 var MessageSound = new Audio("message.mp3");
+var played = false;
 
 window.onblur = function() {window_blur = true;}
 window.onfocus = function() {
@@ -42,6 +43,10 @@ window.onfocus = function() {
 					'onReady': function(){
 						if (localStorage.player_volume == undefined)
 							localStorage.player_volume = 50;
+
+						var version = $("#changelist_button").data("version");
+						if (localStorage.player_version != version)
+							$("#changelist_button").addClass("new");
 
 						player.setVolume(localStorage.player_volume);
 						$("#volume").val(localStorage.player_volume);
@@ -74,6 +79,7 @@ function socket_init() {
 		var video_url = data.video;
 		var time = data.time;
 		var play = data.play;
+		played = play;
 
 		if (play == true) {
 			player.loadVideoById(video_url, time + delta);
@@ -99,6 +105,7 @@ function socket_init() {
 			player.seekTo(data.time, true);
 			player.playVideo();
 		}
+		played = true;
 		data.type = "play";
 		system_message(data);
 	});
@@ -106,6 +113,7 @@ function socket_init() {
 	socket.on("pause", function(data){
 		data.type = "pause";
 		player.pauseVideo();
+		played = false;
 		system_message(data);
 	});
 
@@ -178,6 +186,12 @@ function socket_init() {
 					e.preventDefault();
 					return false;
 				});
+		}
+	});
+
+	socket.on("kick", function(data){
+		if (data.user == localStorage.player_nick) {
+			document.location = "about:blank";
 		}
 	});
 
@@ -254,9 +268,10 @@ function socket_init() {
 
 	function checkNewMessages() {
 		if ( !$("#chat").hasClass("active") ) {
-			$("#chat .header .new").show();
-			$("#chat .header .new").html(new_messages);
+			if (new_messages > 0)
+				$("#chat .header .new").show();
 			new_messages++;
+			$("#chat .header .new").html(new_messages);
 		}
 		else {
 			if (window_blur) new_messages++;
@@ -273,16 +288,33 @@ function socket_init() {
 		}, "fast");
 	}
 
-	function checkSmiles(text) {
-		var smiles = [ 
-			/KappaOrange/g, /KappaPride/g, /KappaRoss/g, /KappaHD/g, /Facepalm/g, /Valakas/g, /Kombik/g, /Godzila/g, /Kappa/g, /Keepo/g, /Niger/g, /Ninja/g, /Vedro/g, /Pezda/g, /Ogre/g, /Kaef/g, /Girl/g, /Rage/g, /Omg/g, /Bro/g, /Rip/g, /Vac/g, /Уво/g, /Лен/g
-		];
+	///////////////////////////////////
+	// SMILES GENERATE REGEXP's ///////
+	var smiles_buff = [ 
+		"KappaOrange", "KappaPride", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Kappa", "Keepo", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Уво", "Лен"
+	], smiles = [];
 
+	for(var a in smiles_buff) {
+		var smile = smiles_buff[a];
+		var s1 = new RegExp(smile, "g");
+		var s2 = new RegExp(smile + "Big", "g");
+		smiles.push(s2);
+		smiles.push(s1);
+	}
+	////////////////////////////////////
+
+	function checkSmiles(text) {
 		for(var a in smiles) {
 			var smile = smiles[a];
 			var smile_clear = String(smile).replace("/","").replace("/g", "");
 			var smile_lower = smile_clear.toLocaleLowerCase();
-			var file = `<img src='img/s/${smile_lower}.png'>`;
+
+			if (smile_clear.indexOf("Big") == -1)
+				var file = `<img src='img/s/${smile_lower}.png'>`;
+			else {
+				smile_lower = smile_lower.replace("big", "");
+				var file = `<img src='img/s/${smile_lower}.png' class='big'>`;
+			}
 
 			text = text.replace(smile, file);
 		};
@@ -396,7 +428,8 @@ function socket_init() {
 		localStorage.player_volume = volume;
 	};
 
-	$('#page').bind('mousewheel', function(e){
+
+	$('#page').bind("mousewheel", function(e){
 		var volume = parseInt($("#volume").val());
 		var newVolume = 0;
 		if(e.originalEvent.wheelDelta < 0) {
@@ -515,6 +548,13 @@ $("#playlist .header").click(function(){
 });
 
 
+$("#changelist_button").click(function(){
+	alert(`Последние нововведения:\n\n- Теперь при нажатие кнопки пробел видео ставиться на паузу/плей\n- При новых нововведениях кнопушка мигает`);
+	$("#changelist_button").removeClass("new");
+	localStorage.player_version = $(this).data("version");
+});
+
+
 //////////////////////////////
 // 	 PAGE KEYBOARD EVENTS 	//
 //////////////////////////////
@@ -524,6 +564,7 @@ $(document).keydown(function(event){
 	var chat_open = $("#chat").hasClass("active");
 	var chat_focus = $("#chat input").is(":focus");
 
+	// Focus Chat
 	if (event.keyCode == 13 && loader_focus == false) {
 		$("#chat input").focus();
 		if (chat_open == false) {
@@ -534,9 +575,16 @@ $(document).keydown(function(event){
 		}
 	}
 
+	// DeFocus Chat
 	if (event.keyCode == 27 && chat_open) {
 		 $("#chat").removeClass("active");
 		 $("#chat input").blur();
+	}
+
+	// Pause Video
+	if (event.keyCode == 32 && !chat_focus) {
+		if (played) $("#stop").click();
+		else $("#play").click();
 	}
 });
 

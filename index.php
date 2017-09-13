@@ -15,6 +15,8 @@
 </head>
 <body>
 
+	<div id="changelist_button" data-version="0.22"></div>
+
 	<div id="page" class="p480">
 		<div class="overflow"></div>
 		<div id="player"></div>
