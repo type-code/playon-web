@@ -468,6 +468,7 @@ a {
 #chat .messages div.play,
 #chat .messages div.load,
 #chat .messages div.pause,
+#chat .messages div.rename,
 #chat .messages div.rewind {
 	color: white;
 	text-align: center;
@@ -482,6 +483,9 @@ a {
 }
 #chat .messages div.rewind {
 	background: #16a085;
+}
+#chat .messages div.rename {
+	background: #36a4bb;
 }
 #chat .messages div.load {
 	background: #2980b9;

@@ -135,6 +135,11 @@ function socket_init() {
 		system_message(data);
 	});
 
+	socket.on("rename", function(data){
+		data.type = "rename";
+		system_message(data);
+	});
+
 	socket.on("message", function(data){
 		var nick = data.nick;
 		var text = data.text;
@@ -258,6 +263,9 @@ function socket_init() {
 			var time = formatTime(data.second);
 			text = `${nick} rewind to <b>${time}</b>`;
 		}
+		if (type == "rename") {
+			text = `<b>${nick}</b> renamed to <b>${data.new_nick}</b>`;
+		}
 
 		var date = formatDate(new Date().getTime());
 		var msg = `<div class="${type}" title="${date}">${text}</div>`;
@@ -310,10 +318,10 @@ function socket_init() {
 			var smile_lower = smile_clear.toLocaleLowerCase();
 
 			if (smile_clear.indexOf("Big") == -1)
-				var file = `<img src='img/s/${smile_lower}.png'>`;
+				var file = `<img src='img/s/${smile_lower}.png' alt='${smile_clear}'>`;
 			else {
 				smile_lower = smile_lower.replace("big", "");
-				var file = `<img src='img/s/${smile_lower}.png' class='big'>`;
+				var file = `<img src='img/s/${smile_lower}.png' class='big' alt='${smile_clear}'>`;
 			}
 
 			text = text.replace(smile, file);
@@ -354,8 +362,7 @@ function socket_init() {
 	});
 
 	$("#chat .header .setup").click(function(){
-		$("#loader").css("display", "flex");
-		$("#loader").fadeIn("slow");
+		$("#loader").fadeIn("slow").css("display", "flex");
 		$("#loader button").show();
 		$("#loader .nickname").val(localStorage.player_nick);
 		$("#loader .color").val(localStorage.player_color);
@@ -509,20 +516,27 @@ function socket_init() {
 }
 
 
-$("#loader input").keyup(function(event){
-	var nick = $(this).val();
+$("#loader .nickname").keyup(function(event){
+	var new_nick = $(this).val();
 	var color = $("#loader .color").val();
 
-	if (nick.length > 11) {
-		nick = nick.substr(0, 11);
-		$(this).val(nick);
+	if (new_nick.length > 11) {
+		new_nick = new_nick.substr(0, 11);
+		$(this).val(new_nick);
 	}
 
 	if (event.keyCode == 13) {
-		localStorage.player_nick = nick;
+		if (new_nick != nick) {
+			socket.emit("rename", {nick, new_nick});
+		}
+
+		localStorage.player_nick = new_nick;
 		localStorage.player_color = color;
-		document.location.reload();
+		nick = localStorage.player_nick;
+
+		$("#loader").fadeOut("slow").css("display", "none");
 	}
+
 
 	return false;
 });
@@ -549,7 +563,11 @@ $("#playlist .header").click(function(){
 
 
 $("#changelist_button").click(function(){
-	alert(`Последние нововведения:\n\n- Теперь при нажатие кнопки пробел видео ставиться на паузу/плей\n- При новых нововведениях кнопушка мигает`);
+	alert(`Последние нововведения:\n\n
+		- Теперь при нажатие кнопки пробел видео ставиться на паузу/плей\n
+		- При новых нововведениях кнопушка мигает\n
+		- При копирование текста в чате, смайлики тоже будут скопированны\n
+		- При изменение цвета/ника сайт не будет перезагружаться, а также в чате все пользователи будут уведомлены о вашей смене ника`);
 	$("#changelist_button").removeClass("new");
 	localStorage.player_version = $(this).data("version");
 });
@@ -563,6 +581,7 @@ $(document).keydown(function(event){
 	var loader_focus = $("#loader input").is(":focus");
 	var chat_open = $("#chat").hasClass("active");
 	var chat_focus = $("#chat input").is(":focus");
+	var nickinput = $("#loader .nickname").is(":focus");
 
 	// Focus Chat
 	if (event.keyCode == 13 && loader_focus == false) {
@@ -582,7 +601,7 @@ $(document).keydown(function(event){
 	}
 
 	// Pause Video
-	if (event.keyCode == 32 && !chat_focus) {
+	if (event.keyCode == 32 && !chat_focus && !nickinput) {
 		if (played) $("#stop").click();
 		else $("#play").click();
 	}

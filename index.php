@@ -15,7 +15,7 @@
 </head>
 <body>
 
-	<div id="changelist_button" data-version="0.22"></div>
+	<div id="changelist_button" data-version="0.23"></div>
 
 	<div id="page" class="p480">
 		<div class="overflow"></div>
@@ -84,7 +84,7 @@
 		<div>
 			<h1>Enter you nickname:</h1>
 			<div class="inputs">
-				<input type="text" class="nickname">
+				<input type="text" class="nickname" maxlength="11">
 				<input type="color" class="color">
 			</div>
 			<button>CANCEL</button>
