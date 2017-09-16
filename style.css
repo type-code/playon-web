@@ -53,6 +53,8 @@ a {
 #page #player {
 	/*border-radius: 4px;
 	overflow: hidden;*/
+	width: 100%;
+	height: 100%;
 }
 #page .overflow {
 	position: absolute;

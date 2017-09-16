@@ -15,7 +15,10 @@ var connetion_step = 0;
 var MessageSound = new Audio("message.mp3");
 var played = false;
 
-window.onblur = function() {window_blur = true;}
+window.onblur = function() {
+	window_blur = true;
+}
+
 window.onfocus = function() {
 	window_blur = false;
 	document.title = window_title;
@@ -27,34 +30,18 @@ window.onfocus = function() {
 //function onYouTubeIframeAPIReady() {
 //$(document).ready(function(){
 	function onYouTubeIframeAPIReady() {
-		if (nick != undefined && nick != "") {
+		if (nick) {
 			connetion_step = 1;
 			player = new YT.Player('player', {
-				height: '480',
 				playerVars: { 
-					'iv_load_policy': 3,
-					'autoplay': 0, 
-					'controls': 0, 
-					'showinfo': 0, 
-					'rel': 0
+					iv_load_policy: 3,
+					autoplay: 0, 
+					controls: 0, 
+					showinfo: 0, 
+					rel: 0
 				},
-				width: '854',
 				events: {
-					'onReady': function(){
-						if (localStorage.player_volume == undefined)
-							localStorage.player_volume = 50;
-
-						var version = $("#changelist_button").data("version");
-						if (localStorage.player_version != version)
-							$("#changelist_button").addClass("new");
-
-						player.setVolume(localStorage.player_volume);
-						$("#volume").val(localStorage.player_volume);
-
-						$("#player").attr("width", "100%");
-						$("#player").attr("height", "100%");
-						socket_init();
-					}
+					onReady: player_init
 				}
 			});
 	   }
@@ -69,6 +56,19 @@ window.onfocus = function() {
 //}
 
 
+function player_init() {
+	if (localStorage.player_volume == undefined)
+		localStorage.player_volume = 50;
+
+	var version = $("#changelist_button").data("version");
+	if (localStorage.player_version != version)
+		$("#changelist_button").addClass("new");
+
+	player.setVolume(localStorage.player_volume);
+	$("#volume").val(localStorage.player_volume);
+
+	socket_init();
+}
 
 
 function socket_init() {
@@ -78,10 +78,9 @@ function socket_init() {
 	socket.on("connected", function(data){
 		var video_url = data.video;
 		var time = data.time;
-		var play = data.play;
-		played = play;
+		played = data.play;
 
-		if (play == true) {
+		if (played == true) {
 			player.loadVideoById(video_url, time + delta);
 		}
 		else {
@@ -95,7 +94,6 @@ function socket_init() {
 
 		// CALLBACK TO JOIN SERVER
 		socket.emit("join", {nick});
-
 	});
 
 	socket.on("play", function(data){
@@ -132,11 +130,6 @@ function socket_init() {
 		var second = data.second;
 
 		player.seekTo(second, true);
-		system_message(data);
-	});
-
-	socket.on("rename", function(data){
-		data.type = "rename";
 		system_message(data);
 	});
 
@@ -238,6 +231,7 @@ function socket_init() {
 
 	socket.on("join", system_message);
 	socket.on("disc", system_message);
+	socket.on("rename", system_message);
 
 	function system_message(data) {
 		var nick = data.nick;
@@ -345,7 +339,7 @@ function socket_init() {
 
 	$("#load").click(function(){
 		var link = prompt("Link to YouTube video:");
-		if (link && link != "") {
+		if (link) {
 			socket.emit("load", {id: link, nick, playlist: false});
 		}
 	});
@@ -355,7 +349,7 @@ function socket_init() {
 			var text = $(this).val();
 			var color = localStorage.player_color;
 
-			if (text.length > 140) text = text.substr(0, 140);
+			if (text.length > 150) text = text.substr(0, 150);
 			socket.emit("message", {nick, text, color});
 			$(this).val('');
 		}
@@ -426,14 +420,11 @@ function socket_init() {
 	});
 
 
-	$("#volume").change(changeVolume);
-	$("#volume").mousemove(changeVolume);
-
-	function changeVolume() {
+	$("#volume").mousemove(function(){
 		var volume = $("#volume").val();
 		player.setVolume(String(volume));
 		localStorage.player_volume = volume;
-	};
+	});
 
 
 	$('#page').bind("mousewheel", function(e){
@@ -563,11 +554,12 @@ $("#playlist .header").click(function(){
 
 
 $("#changelist_button").click(function(){
-	alert(`Последние нововведения:\n\n
-		- Теперь при нажатие кнопки пробел видео ставиться на паузу/плей\n
-		- При новых нововведениях кнопушка мигает\n
-		- При копирование текста в чате, смайлики тоже будут скопированны\n
-		- При изменение цвета/ника сайт не будет перезагружаться, а также в чате все пользователи будут уведомлены о вашей смене ника`);
+	var update = ["Последние нововведения:\n"];
+	update[1] = "- Теперь при нажатие кнопки пробел видео ставиться на паузу/плей";
+	update[2] = "- При новых нововведениях кнопушка мигает";
+	update[3] = "- При копирование текста в чате, смайлики тоже будут скопированны";
+	update[4] = "- При изменение цвета/ника сайт не будет перезагружаться, а также в чате все пользователи будут уведомлены о вашей смене ника";
+	alert(update.join("\n"));
 	$("#changelist_button").removeClass("new");
 	localStorage.player_version = $(this).data("version");
 });
@@ -620,8 +612,10 @@ $(document).ready(function(){
 	//document.location.reload();
 	//socket_init();
 	setTimeout(function(){
-		if (player == null)
+		if (player == null) {
 			onYouTubeIframeAPIReady();
+			console.log("Trying reinit");
+		}
 
 		setTimeout(function(){
 			if ((socket == null || player == null) && (localStorage.player_nick != undefined) && connetion_step == 0) 
