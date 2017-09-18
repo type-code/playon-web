@@ -293,7 +293,7 @@ function socket_init() {
 	///////////////////////////////////
 	// SMILES GENERATE REGEXP's ///////
 	var smiles_buff = [ 
-		"KappaOrange", "KappaPride", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Kappa", "Keepo", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Уво", "Лен"
+		"KappaOrange", "KappaPride", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Kappa", "Keepo", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Уво", "Лен", "Dendi", "Story", "Omfg", "Cat", "Dog", "Rofl", "Hey", "Baby", "God", "Photo", "Angry"
 	], smiles = [];
 
 	for(var a in smiles_buff) {
@@ -517,13 +517,18 @@ $("#loader .nickname").keyup(function(event){
 	}
 
 	if (event.keyCode == 13) {
-		if (new_nick != nick) {
-			socket.emit("rename", {nick, new_nick});
-		}
-
+		var old_nick = nick;
 		localStorage.player_nick = new_nick;
 		localStorage.player_color = color;
 		nick = localStorage.player_nick;
+
+		if (socket) {
+			if (new_nick != old_nick)
+			socket.emit("rename", {old_nick, new_nick});
+		}
+		else {
+			onYouTubeIframeAPIReady();
+		}
 
 		$("#loader").fadeOut("slow").css("display", "none");
 	}
@@ -559,6 +564,7 @@ $("#changelist_button").click(function(){
 	update[2] = "- При новых нововведениях кнопушка мигает";
 	update[3] = "- При копирование текста в чате, смайлики тоже будут скопированны";
 	update[4] = "- При изменение цвета/ника сайт не будет перезагружаться, а также в чате все пользователи будут уведомлены о вашей смене ника";
+	update[5] = "- Новые смайлы: Dendi, Story, Omfg, Cat, Dog, Rofl, Hey, Baby, God, Photo, Angry";
 	alert(update.join("\n"));
 	$("#changelist_button").removeClass("new");
 	localStorage.player_version = $(this).data("version");
