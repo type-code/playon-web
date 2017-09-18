@@ -293,7 +293,7 @@ function socket_init() {
 	///////////////////////////////////
 	// SMILES GENERATE REGEXP's ///////
 	var smiles_buff = [ 
-		"KappaOrange", "KappaPride", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Kappa", "Keepo", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Уво", "Лен", "Dendi", "Story", "Omfg", "Cat", "Dog", "Rofl", "Hey", "Baby", "God", "Photo", "Angry"
+		"KappaOrange", "KappaPride", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Kappa", "Keepo", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Уво", "Лен", "Dendi", "Story", "Omfg", "Cat", "Dog", "Rofl", "Hey", "Baby", "God", "Photo", "Angry", "Cry"
 	], smiles = [];
 
 	for(var a in smiles_buff) {

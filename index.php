@@ -1,4 +1,4 @@
-<? $cache = time(); ?>
+<? $version = 25; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,14 +8,14 @@
 	<meta http-equiv="Expires" content="Wed, 26 Feb 1999 08:21:57 GMT">
 	<link rel="shortcut icon" href="favicon.ico" />
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&amp;subset=cyrillic" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="style.css?<?=$cache;?>">
+	<link rel="stylesheet" type="text/css" href="style.css?<?=$version;?>">
 	<script src="youtube_api.js"></script>
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 	<script src="socket.io.js"></script>
 </head>
 <body>
 
-	<div id="changelist_button" data-version="0.24"></div>
+	<div id="changelist_button" data-version="<?=$version;?>"></div>
 
 	<div id="page" class="p480">
 		<div class="overflow"></div>
@@ -91,6 +91,6 @@
 		</div>
 	</div>
 
-<script src="main.js?<?=$cache;?>"></script>
+<script src="main.js?<?=$version;?>"></script>
 </body>
 </html>
