@@ -170,6 +170,7 @@ a {
 	position: fixed;
 	background: white;
 	bottom: -95px;
+	left: calc(50% - 250px);
 	box-shadow: 0px 0px 50px rgba(0,0,0,0.35);
 	border-radius: 4px;
 	padding: 10px;

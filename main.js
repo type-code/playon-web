@@ -15,6 +15,8 @@ var connetion_step = 0;
 var MessageSound = new Audio("message.mp3");
 var played = false;
 
+const MSG_MAX = 150;
+
 window.onblur = function() {
 	window_blur = true;
 }
@@ -117,7 +119,7 @@ function socket_init() {
 
 	socket.on("load", function(data){
 		var video = data.video;
-		player.cueVideoById(video);
+		player.cueVideoById(video, 0);
 		$("#timeline .line").css("width", "0%");
 		data.type = "load";
 		system_message(data);
@@ -173,7 +175,7 @@ function socket_init() {
 				item.find(".play").click(function(e){
 					var id = $(this).parents(".item").data("video");
 					var nick = localStorage.player_nick;
-					socket.emit("load", {id, nick, playlist: true});
+					socket.emit("load", {link, nick, playlist: true});
 					e.preventDefault();
 					return false;
 				});
@@ -293,7 +295,7 @@ function socket_init() {
 	///////////////////////////////////
 	// SMILES GENERATE REGEXP's ///////
 	var smiles_buff = [ 
-		"KappaOrange", "KappaPride", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Kappa", "Keepo", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Уво", "Лен", "Dendi", "Story", "Omfg", "Cat", "Dog", "Rofl", "Hey", "Baby", "God", "Photo", "Angry", "Cry"
+		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Keepo", "Kappa", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Уво", "Лен", "Dendi", "Story", "Omfg", "Cat", "Dog", "Rofl", "Hey", "Baby", "God", "Photo", "Angry", "Cry"
 	], smiles = [];
 
 	for(var a in smiles_buff) {
@@ -310,12 +312,14 @@ function socket_init() {
 			var smile = smiles[a];
 			var smile_clear = String(smile).replace("/","").replace("/g", "");
 			var smile_lower = smile_clear.toLocaleLowerCase();
+			var sss = smile_clear;
 
 			if (smile_clear.indexOf("Big") == -1)
-				var file = `<img src='img/s/${smile_lower}.png' alt='${smile_clear}'>`;
+				var file = `<img src='img/s/${smile_lower}.png'>`;
 			else {
 				smile_lower = smile_lower.replace("big", "");
-				var file = `<img src='img/s/${smile_lower}.png' class='big' alt='${smile_clear}'>`;
+				var file = `<img src='img/s/${smile_lower}.png' class='big'>`;
+				//console.log(smile, smile_clear, smile_lower, sss, file);
 			}
 
 			text = text.replace(smile, file);
@@ -340,7 +344,7 @@ function socket_init() {
 	$("#load").click(function(){
 		var link = prompt("Link to YouTube video:");
 		if (link) {
-			socket.emit("load", {id: link, nick, playlist: false});
+			socket.emit("load", {link, playlist: false});
 		}
 	});
 
@@ -349,7 +353,7 @@ function socket_init() {
 			var text = $(this).val();
 			var color = localStorage.player_color;
 
-			if (text.length > 150) text = text.substr(0, 150);
+			if (text.length > MSG_MAX) text = text.substr(0, MSG_MAX);
 			socket.emit("message", {nick, text, color});
 			$(this).val('');
 		}
@@ -384,6 +388,7 @@ function socket_init() {
 		var rewind_percent = x / max_x;
 		var rewind_seconds = duration * rewind_percent;
 
+		if (player.getPlayerState() != 5)
 		socket.emit("rewind", {second: rewind_seconds, nick});
 	});
 
@@ -391,7 +396,6 @@ function socket_init() {
 		var x = event.offsetX;
 		var y = event.offsetY;
 		var max_x = $("#timeline").width();
-		
 
 		var duration = player.getDuration();
 		var rewind_percent = x / max_x;
@@ -533,7 +537,6 @@ $("#loader .nickname").keyup(function(event){
 		$("#loader").fadeOut("slow").css("display", "none");
 	}
 
-
 	return false;
 });
 
@@ -564,7 +567,7 @@ $("#changelist_button").click(function(){
 	update[2] = "- При новых нововведениях кнопушка мигает";
 	update[3] = "- При копирование текста в чате, смайлики тоже будут скопированны";
 	update[4] = "- При изменение цвета/ника сайт не будет перезагружаться, а также в чате все пользователи будут уведомлены о вашей смене ника";
-	update[5] = "- Новые смайлы: Dendi, Story, Omfg, Cat, Dog, Rofl, Hey, Baby, God, Photo, Angry";
+	update[5] = "- Новые смайлы: KappaDark, Dendi, Story, Omfg, Cat, Dog, Rofl, Hey, Baby, God, Photo, Angry, Cry";
 	alert(update.join("\n"));
 	$("#changelist_button").removeClass("new");
 	localStorage.player_version = $(this).data("version");
