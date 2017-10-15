@@ -1,11 +1,8 @@
-<? $version = 25; ?>
+<? $version = 26; ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Real Time Player</title>
-	<meta http-equiv="Cache-Control" content="no-cache">
-	<meta http-equiv="pragma" content="no-cache"/>
-	<meta http-equiv="Expires" content="Wed, 26 Feb 1999 08:21:57 GMT">
 	<link rel="shortcut icon" href="favicon.ico" />
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&amp;subset=cyrillic" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="style.css?<?=$version;?>">

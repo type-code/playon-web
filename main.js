@@ -98,6 +98,14 @@ function socket_init() {
 		socket.emit("join", {nick});
 	});
 
+	socket.on("disconnect", function(data){
+		system_message({type: "disconnect"});
+	});
+
+	socket.on("reconnect", function(data){
+		system_message({type: "reconnect"});
+	});
+
 	socket.on("play", function(data){
 		if (data.video != video)
 			player.loadVideoById(data.video, data.time);
@@ -128,10 +136,9 @@ function socket_init() {
 	});
 
 	socket.on("rewind", function(data){
-		var nick = data.nick;
-		var second = data.second;
+		var time = data.time;
 
-		player.seekTo(second, true);
+		player.seekTo(time, true);
 		system_message(data);
 	});
 
@@ -155,7 +162,6 @@ function socket_init() {
 	});
 
 	socket.on("playlist", function(data){
-		//console.log(data);
 		$("#playlist .list .item:not(.template)").remove();
 
 		for(var id in data) {
@@ -173,9 +179,8 @@ function socket_init() {
 				item.attr("title", video.title);
 
 				item.find(".play").click(function(e){
-					var id = $(this).parents(".item").data("video");
-					var nick = localStorage.player_nick;
-					socket.emit("load", {link, nick, playlist: true});
+					var link = $(this).parents(".item").data("video");
+					socket.emit("load", {link, playlist: true});
 					e.preventDefault();
 					return false;
 				});
@@ -238,29 +243,46 @@ function socket_init() {
 	function system_message(data) {
 		var nick = data.nick;
 		var type = data.type
-		var text;
+		var text = null;
 
-		if (type == "join") {
-			text = `<b>${nick}</b> joined us...`;
-		}
-		if (type == "disc") {
-			text = `<b>${nick}</b> disconnected...`;
-		}
-		if (type == "play") {
-			text = `<b>${nick}</b> played video...`;
-		}
-		if (type == "pause") {
-			text = `<b>${nick}</b> paused video...`;
-		}
-		if (type == "load") {
-			text = `<b>${nick}</b> load video...`;
-		}
-		if (type == "rewind") {
-			var time = formatTime(data.second);
-			text = `${nick} rewind to <b>${time}</b>`;
-		}
-		if (type == "rename") {
-			text = `<b>${nick}</b> renamed to <b>${data.new_nick}</b>`;
+		switch(type) {
+			case "join": {
+				text = `<b>${nick}</b> joined us...`;
+				break;
+			}
+			case "disc": {
+				text = `<b>${nick}</b> disconnected...`;
+				break;
+			}
+			case "play": {
+				text = `<b>${nick}</b> played video...`;
+				break;
+			}
+			case "pause": {
+				text = `<b>${nick}</b> paused video...`;
+				break;
+			}
+			case "load": {
+				text = `<b>${nick}</b> load video...`;
+				break;
+			}
+			case "rewind": {
+				var time = formatTime(data.time);
+				text = `${nick} rewind to <b>${time}</b>`;
+				break;
+			}
+			case "rename": {
+				text = `<b>${data.old_nick}</b> renamed to <b>${data.new_nick}</b>`;
+				break;
+			}
+			case "disconnect": {
+				text = "Connection lost! Reconnecting...";
+				break;
+			}
+			case "reconnect": {
+				text = "Connection repaired!";
+				break;
+			}
 		}
 
 		var date = formatDate(new Date().getTime());
@@ -295,7 +317,7 @@ function socket_init() {
 	///////////////////////////////////
 	// SMILES GENERATE REGEXP's ///////
 	var smiles_buff = [ 
-		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Keepo", "Kappa", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Уво", "Лен", "Dendi", "Story", "Omfg", "Cat", "Dog", "Rofl", "Hey", "Baby", "God", "Photo", "Angry", "Cry"
+		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Keepo", "Kappa", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Rofl", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto"
 	], smiles = [];
 
 	for(var a in smiles_buff) {
@@ -354,7 +376,7 @@ function socket_init() {
 			var color = localStorage.player_color;
 
 			if (text.length > MSG_MAX) text = text.substr(0, MSG_MAX);
-			socket.emit("message", {nick, text, color});
+			socket.emit("message", {text, color});
 			$(this).val('');
 		}
 	});
@@ -389,7 +411,7 @@ function socket_init() {
 		var rewind_seconds = duration * rewind_percent;
 
 		if (player.getPlayerState() != 5)
-		socket.emit("rewind", {second: rewind_seconds, nick});
+		socket.emit("rewind", {time: rewind_seconds, nick});
 	});
 
 	$("#timeline").mousemove(function(event){
@@ -413,14 +435,14 @@ function socket_init() {
 	$("#timer .back").click(function(){
 		var second = player.getCurrentTime() - 10;
 		if (second < 0) second = 0;
-		socket.emit("rewind", {second, nick});
+		socket.emit("rewind", {time: second, nick});
 	});
 
 	$("#timer .forward").click(function(){
 		var duration = player.getDuration();
 		var second = player.getCurrentTime() + 10;
 		if (second > duration) second = duration;
-		socket.emit("rewind", {second, nick});
+		socket.emit("rewind", {time: second, nick});
 	});
 
 
@@ -464,10 +486,14 @@ function socket_init() {
 		$("#menu #quality div").removeClass("active");
 		$(this).addClass("active");
 
-		if (quality == "full")
+		if (quality == "full") {
+			$("body").addClass("full");
 			document.documentElement.webkitRequestFullScreen();
-		else 
+		}
+		else {
+			$("body").removeClass("full");
 			document.webkitCancelFullScreen();
+		}
 
 	});
 
@@ -567,7 +593,8 @@ $("#changelist_button").click(function(){
 	update[2] = "- При новых нововведениях кнопушка мигает";
 	update[3] = "- При копирование текста в чате, смайлики тоже будут скопированны";
 	update[4] = "- При изменение цвета/ника сайт не будет перезагружаться, а также в чате все пользователи будут уведомлены о вашей смене ника";
-	update[5] = "- Новые смайлы: KappaDark, Dendi, Story, Omfg, Cat, Dog, Rofl, Hey, Baby, God, Photo, Angry, Cry";
+	update[5] = "- Новые смайлы: KappaDark, Dendi, Story, Omfg, Cat, Dog, Rofl, Hey, Baby, God, Photo, Angry, Cry, History, Naruto";
+	update[6] = "- Немного обновлён Fullscreen мод.";
 	alert(update.join("\n"));
 	$("#changelist_button").removeClass("new");
 	localStorage.player_version = $(this).data("version");
