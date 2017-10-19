@@ -1,4 +1,4 @@
-<? $version = 26; ?>
+<? $version = 30; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +13,32 @@
 <body>
 
 	<div id="changelist_button" data-version="<?=$version;?>"></div>
+	<div id="changelist">
+		<h1>Playon - Changelog</h1>
+		<div class="close"></div>
+
+		<div class="news">
+			<h2>Update 0.30<span>19.10.2017</span></h2>
+			<p>- Добавленна функция передачи кликов по видео. Для этого при зажатой кнопке CTRL нажмите на любую часть видео<br>
+			- Добавленно окно списка изменений версий<br>
+			- Изменены некоторые цвета на странице</p>
+
+			<h2>Update 0.29<span>16.10.2017</span></h2>
+			<p>- Новые смайлы: Naruto, KappaNinja, KappaSoldier, Wow, Love, Slow, Wut, Frog, Illuminati, FroggyOmg, FroggySleep, FroggyCry, MegaRofl, KappaWatch<br>
+			- Добавленна эксперементальная функция вставки изображений из буфера обмена</p>
+
+			<h2>Update 0.28<span>15.10.2017</span></h2>
+			<p>- Новые смайлы: KappaDark, Dendi, Story, Omfg, Cat, Dog, Rofl, Hey, Baby, God, Photo, Angry, Cry, History<br>
+			- Немного обновлён Fullscreen мод.</p>
+
+			<h2>Update 0.27<span>Давно :D</span></h2>
+			<p>- При изменение цвета/ника сайт не будет перезагружаться, а также в чате все пользователи будут уведомлены о вашей смене ника</p>
+
+			<h2>Update 0.2<span>Очень давно :DD</span></h2>
+			<p>- Теперь при нажатие кнопки пробел видео ставиться на паузу/плей<br>
+			- При новых нововведениях кнопушка мигает</p>
+		</div>
+	</div>
 
 	<div id="page" class="p480">
 		<div class="overflow"></div>
@@ -73,7 +99,7 @@
 			Chat:
 		</div>
 		<div class="messages"></div>
-		<input type="text">
+		<input type="text" placeholder="Press ENTER to focus input...">
 	</div>
 
 
@@ -89,5 +115,6 @@
 	</div>
 
 <script src="main.js?<?=$version;?>"></script>
+
 </body>
 </html>

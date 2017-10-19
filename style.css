@@ -36,6 +36,7 @@ a {
 	padding-bottom: 2px;
 	position: relative;
 	transition: all 0.25s;
+	user-select: none;
 }
 #page:hover > #timeline {
 	height: 32px;
@@ -111,7 +112,7 @@ a {
 
 
 #page #timeline {
-	background: #2c3e50;
+	background: #2c1337;/*#2c3e50;*/
 	width: 100%;
 	height: 20px;
 	border: 10px solid white;
@@ -132,7 +133,7 @@ a {
 	top: 0px;
 	bottom: 0px;
 	width: 0%;
-	background: #8e44ad;
+	background: #5e2b74;/*#8e44ad;*/
 }
 #page #timeline .time {
 	display: none;
@@ -159,7 +160,32 @@ a {
 	opacity: 1;
 }
 
+.dark #page #timeline {
+	border-color: #111;
+}
 
+
+
+#page .mark {
+	opacity: 0;
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.25));
+	transform: translateX(-35px) translateY(-35px) scale(0);
+	border-radius: 100%;
+	border: 10px solid black;
+	transition: all 0.25s;
+}
+#page .mark.start {
+	transform: translateX(-35px) translateY(-35px) scale(1);
+	opacity: 1;
+}
+#page .mark.reduction {
+	transition: all 0.2s;
+	transform: translateX(-35px) translateY(-35px) scale(6);
+	opacity: 0;
+}
 
 
 
@@ -172,7 +198,7 @@ a {
 	bottom: -95px;
 	left: calc(50% - 250px);
 	box-shadow: 0px 0px 50px rgba(0,0,0,0.35);
-	border-radius: 4px;
+	border-radius: 4px 4px 0px 0px;
 	padding: 10px;
 	transition: all 0.5s;
 	text-align: center;
@@ -195,6 +221,10 @@ a {
 	left: 0px;
 	right: 0px;
 	top: 0px;
+}
+
+.dark #menu .header {
+	background-color: #151515;
 }
 
 #menu button {
@@ -248,7 +278,6 @@ a {
 	right: -20px;
 	top: 65px;
 	bottom: 10px;
-	ing-mode: bt-lr;
 	width: 70px;
 	height: 20px;
 	-webkit-appearance: none !important;
@@ -258,11 +287,11 @@ a {
 #menu #volume::-webkit-slider-thumb {
 	-webkit-appearance: none !important;
 	background: #eee;
-	box-shadow: 0px 1px 6px rgba(0,0,0,0.25);
+	box-shadow: 0px 0px 5px rgba(0,0,0,0.25);
 	border-radius: 100%;
 	width: 16px;
 	height: 16px;
-	border: 1px solid rgba(0,0,0,0.1);
+	border: 1px solid rgba(0,0,0,0.2);
 	margin-top: -6px;
 }
 
@@ -284,15 +313,21 @@ a {
 	background: #dedede;
 	height: 65px;
 	width: 26px;
-	border: 1px solid rgba(0,0,0,0.1);
+	border: 1px solid rgba(0,0,0,0.15);
 	box-sizing: border-box;
 	padding: 3px;
 	border-radius: 100px;
 	cursor: pointer;
+	transition: all 0.5s;
+
+	background-image: url(/img/light_false.png);
+	background-position: 50% calc(100% - 5px);
+	background-size: 22px;
+	background-repeat: no-repeat;
 }
-#menu #light.dark > .pointer {
-	background: #333;
-	top: 32px;
+.dark #menu #light {
+	background-image: url(/img/light_true.png);
+	background-position: 50% 5px;
 }
 #menu #light .pointer {
 	width: 18px;
@@ -304,6 +339,10 @@ a {
 	top: 0px;
 	border: 1px solid rgba(0,0,0,0.3);
 	box-sizing: border-box;
+}
+.dark #menu #light > .pointer {
+	background: #333;
+	top: 32px;
 }
 
 
@@ -346,7 +385,7 @@ a {
 	background: white;
 	bottom: 10px;
 	right: 10px;
-	box-shadow: 0px 0px 50px rgba(0,0,0,0.35);
+	box-shadow: 0px 0px 30px rgba(0,0,0,0.35);
 	border-radius: 4px;
 	padding: 10px;
 	transition: all 0.5s;
@@ -520,7 +559,7 @@ a {
 	transition: all 0.25s;
 	z-index: 100;
 }
-#chat .messages div img:not(.big):hover {
+#chat .messages div img:not(.big):not(.source):hover {
 	padding: 5px;
 	z-index: 101;
 	margin: -7px -4px;
@@ -545,6 +584,27 @@ a {
 	margin: auto;
 }
 
+#chat .messages div img.source {
+	width: 100%;
+	height: initial;
+	display: block;
+	margin: auto;
+	cursor: pointer;
+}
+#chat .messages div img.source:active,
+#chat .messages div img.source:focus {
+	/*position: fixed;
+	top: calc(50% - 240px);
+	left: calc(50% - 400px);
+	width: 800px;
+	height: 480px;
+	object-fit: cover;
+	z-index: 100000000;
+	background-color: white;
+	padding: 10px;
+	box-sizing: border-box;*/
+}
+
 #chat input {
 	background: #e5e5e5;
 	color: #333;
@@ -555,6 +615,22 @@ a {
 	padding: 5px 8px;
 	border-radius: 0px 0px 3px 3px;
 	border: 1px solid rgba(0,0,0,0.05);
+}
+
+
+.dark #chat {
+	background-color: #1f1e1e;
+}
+.dark #chat .header {
+	background-color: #151515;
+}
+.dark #chat .messages {
+	background-color: rgba(255,255,255,0.0125);
+	color: white;
+}
+.dark #chat input {
+	background-color: rgba(255,255,255,0.04);
+	color: white;
 }
 
 
@@ -595,7 +671,7 @@ a {
 	left: 10px;
 	bottom: 10px;
 	background: white;
-	box-shadow: 0px 0px 50px rgba(0,0,0,0.35);
+	box-shadow: 0px 0px 30px rgba(0,0,0,0.35);
 	border-radius: 4px;
 	padding: 5px;
 	transition: all 0.5s;
@@ -740,7 +816,7 @@ body.dark #playlist .list .item {
 	right: 0px;
 	left: 0px;
 	bottom: 0px;
-	background: rgba(0,0,0,0.925);
+	background: rgba(0,0,0,0.85);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -838,6 +914,95 @@ body #changelist_button.new {
 }
 
 
+#changelist {
+	display: none;
+	position: fixed;
+	left: calc(50% - 250px);
+	top: calc(50% - 300px);
+	width: 500px;
+	height: 600px;
+	background-color: white;
+	z-index: 200000;
+	box-sizing: border-box;
+	padding: 20px;
+	overflow: hidden;
+	border-radius: 5px;
+	box-shadow: 0px 5px 50px 0px rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(0,0,0,0.2);
+}
+#changelist h1 {
+	text-align: center;
+	margin: -20px;
+	margin-bottom: 10px;
+	background: #2980b9;
+	color: white;
+	font-weight: 400;
+	padding: 10px;
+	padding-bottom: 25px;
+	background: linear-gradient(to top, rgba(252,252,252,0) 0%,rgb(38, 142, 211) 100%);
+	text-shadow: 0px 1px 2px rgba(0,0,0,0.25);
+}
+#changelist .close {
+	position: absolute;
+	right: 19px;
+	top: 19px;
+	background-image: url("/img/list_delete.png");
+	background-repeat: no-repeat;
+	background-size: 26px;
+	width: 26px;
+	height: 26px;
+	cursor: pointer;
+	transition: all 0.5s;
+}
+#changelist .close:hover {
+	transform: rotate(180deg);
+}
+#changelist .news {
+	height: 500px;
+	overflow: auto;
+	width: calc(100% + 10px);
+	padding-right: 10px;
+	box-sizing: border-box;
+}
+#changelist h2 {
+	margin: 0px;
+	font-weight: 600;
+	margin-bottom: 7px;
+	padding-bottom: 7px;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+#changelist h2 span {
+	float: right;
+	color: black;
+	opacity: 0.4;
+	font-weight: 100;
+	font-size: 14px;
+	position: relative;
+	top: 10px;
+}
+#changelist p {
+	margin: 0px;
+	font-weight: 300;
+	font-size: 14px;
+	margin-bottom: 20px;
+}
+
+
+#changelist .news::-webkit-scrollbar {
+	border-radius: 6px;
+	width: 6px;
+}
+#changelist .news::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.075);
+	border-radius: 6px;
+}
+#changelist .news::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.15);
+	border-radius: 6px;
+}
+
+
+
 
 #page.full {
 	padding: 0px;
@@ -852,11 +1017,11 @@ body #changelist_button.new {
 #page.full #timeline {
 	z-index: 99999;
 	margin-top: -4px;
-    border: 0px;
-    bottom: 0px;
-    border-color: rgb(17, 17, 17);
-    border-radius: 0px;
-    border-top: 2px solid black;
+	border: 0px;
+	bottom: 0px;
+	border-color: rgb(17, 17, 17);
+	border-radius: 0px;
+	border-top: 2px solid black;
 }
 
 body.full #menu {
@@ -866,12 +1031,19 @@ body.full #playlist, body.full #chat {
 	bottom: 20px;
 }
 body.full #menu:hover, body.full #menu.fix {
-    bottom: 0px;
+	bottom: 0px;
 }
 #page.full #timeline:hover {
 	margin-top: -10px;
 }
 
+body.dark {
+	background: #222;
+}
+
+body.dark #page {
+	background-color: #111;
+}
 
 @media only screen and (orientation: portrait) {
 	#page .overflow {

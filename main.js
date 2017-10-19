@@ -14,6 +14,7 @@ var window_title = document.title;
 var connetion_step = 0;
 var MessageSound = new Audio("message.mp3");
 var played = false;
+var ww = null;
 
 const MSG_MAX = 150;
 
@@ -74,7 +75,7 @@ function player_init() {
 
 
 function socket_init() {
-	var host = document.location.origin;
+	var host = "ws://chrom-web.ga";//document.location.origin;
 	socket = io(host + ":8080/");
 
 	socket.on("connected", function(data){
@@ -161,6 +162,34 @@ function socket_init() {
 		checkNewMessages();
 	});
 
+	socket.on("message_image", function(data){
+		var nick = data.nick;
+		var source = data.image;
+		var image = $("<img />");
+			image.attr("src", source);
+			image.addClass("source");
+			image.click(function(){
+				//console.log(source);
+				// ww = window.open('about:blank');
+				// 	ww.document.location.href = source;
+
+				// setTimeout(function(){
+				// 	ww.document.write = `<img src='${source}'>`;
+				// 	console.log(`<img src='${source}'>`);
+				// 	ww.document.location.href = source;
+				// 	ww.location.href = source;
+				// 	ww.document.URL = source;
+				// }, 1000);
+			});
+
+		var div = $("<div></div>");
+			div.append(`<b>${nick}</b> share image:`);
+			div.append(image);
+			div.appendTo("#chat .messages");
+
+		checkNewMessages();
+	});
+
 	socket.on("playlist", function(data){
 		$("#playlist .list .item:not(.template)").remove();
 
@@ -200,6 +229,29 @@ function socket_init() {
 		}
 	});
 
+	socket.on("click", function(data){
+		var mark = $("<div></div>");
+			mark.appendTo("#page");
+			mark.addClass("mark");
+			mark.css({
+				"left": data.x + "%",
+				"top": data.y + "%",
+				"borderColor": data.color
+			});
+
+		setTimeout(function(){
+			mark.addClass("start");
+		}, 10);
+
+		setTimeout(function(){
+			mark.addClass("reduction");
+		}, 1500);
+
+		setTimeout(function(){
+			mark.remove();
+		}, 2000);
+	});
+
 	socket.on("light", function(data){
 		var light = data.light;
 		changeLight(light);
@@ -208,31 +260,9 @@ function socket_init() {
 	function changeLight(light) {
 		if (light == false) {
 			$("body").addClass("dark");
-			$("body").css("background", "#222");
-			$("#page").css("background", "#111");
-			$("#page #timeline").css("borderColor", "#111");
-			$("#menu #light").addClass("dark");
-
-			$("#chat").css("background", "#1f1e1e");
-			$("#chat .messages").css("background", "#232323");
-			$("#chat .messages").css("color", "white");
-			$("#chat input").css("background", "#2d2d2d");
-			$("#chat input").css("color", "white");
-			$("#chat .header").css("background", "#151515");
-			$("#menu .header").css("background", "#151515");
 		}
 		else {
 			$("body").removeClass("dark");
-			$("body").removeAttr("style");
-			$("#page").removeAttr("style");
-			$("#page #timeline").removeAttr("style");
-			$("#menu #light").removeClass("dark");
-
-			$("#chat").removeAttr("style");
-			$("#chat .messages").removeAttr("style");
-			$("#chat input").removeAttr("style");
-			$("#chat .header").removeAttr("style");
-			$("#menu .header").removeAttr("style");
 		}
 	}
 
@@ -317,7 +347,7 @@ function socket_init() {
 	///////////////////////////////////
 	// SMILES GENERATE REGEXP's ///////
 	var smiles_buff = [ 
-		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "Facepalm", "Valakas", "Kombik", "Godzila", "Keepo", "Kappa", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Rofl", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto"
+		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "Valakas", "Kombik", "Godzila", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "MegaRofl", "Rofl"
 	], smiles = [];
 
 	for(var a in smiles_buff) {
@@ -474,6 +504,23 @@ function socket_init() {
 	});
 
 
+	$("#page").click(function(e){
+		if (e.ctrlKey) {
+			var x = e.offsetX;
+			var y = e.offsetY;
+
+			var width = $(e.target).width();
+			var height = $(e.target).height();
+
+			var xx = +((x / width) * 100).toFixed(2);
+			var yy = +((y / height) * 100).toFixed(2);
+			var color = localStorage.player_color;
+
+			socket.emit("click", {x: xx, y: yy, color: color});
+		}
+	});
+
+
 	$("#light").click(function(){
 		socket.emit("light");
 	});
@@ -588,16 +635,13 @@ $("#playlist .header").click(function(){
 
 
 $("#changelist_button").click(function(){
-	var update = ["Последние нововведения:\n"];
-	update[1] = "- Теперь при нажатие кнопки пробел видео ставиться на паузу/плей";
-	update[2] = "- При новых нововведениях кнопушка мигает";
-	update[3] = "- При копирование текста в чате, смайлики тоже будут скопированны";
-	update[4] = "- При изменение цвета/ника сайт не будет перезагружаться, а также в чате все пользователи будут уведомлены о вашей смене ника";
-	update[5] = "- Новые смайлы: KappaDark, Dendi, Story, Omfg, Cat, Dog, Rofl, Hey, Baby, God, Photo, Angry, Cry, History, Naruto";
-	update[6] = "- Немного обновлён Fullscreen мод.";
-	alert(update.join("\n"));
+	$("#changelist").fadeIn(500);
 	$("#changelist_button").removeClass("new");
 	localStorage.player_version = $(this).data("version");
+});
+
+$("#changelist .close").click(function(){
+	$("#changelist").fadeOut(500);
 });
 
 
@@ -636,6 +680,39 @@ $(document).keydown(function(event){
 });
 
 
+
+$(document).on("paste", function(e){
+	var items = (event.clipboardData  || event.originalEvent.clipboardData).items;
+
+	for(var a = 0; a < items.length; a++) {
+		if (items[a].type.indexOf("image") === 0) {
+			blob = items[a].getAsFile();
+			
+			openFile(blob).then(source => {
+				socket.emit("message_image", {
+					image: source
+				});
+			});
+		}
+	}
+});
+
+
+
+async function openFile(file) {
+	var reader = new FileReader();
+
+	var promise = new Promise((resolve, reject) => {
+		reader.onload = function(event) {
+			var r = event.target.result;
+			resolve(r);
+		};
+		reader.readAsDataURL(blob);
+	});
+	return await promise;
+}
+
+
 /*function fullScreen() {
 	$("#page").css({"width": "100%", "height": "100%", "marginTop": "0px"}); 
 	$("#page #timer").css("top", "15px").css("zIndex", "9999999");
@@ -660,3 +737,4 @@ $(document).ready(function(){
 		}, 2000);
 	}, 2000);
 });
+
