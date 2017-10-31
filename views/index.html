@@ -1,27 +1,47 @@
-<? $version = 30; ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Real Time Player</title>
+	<title>PatyPlay</title>
+	<link rel="prefetch" href="/img/preload.png">
+	<link rel="prerender" href="/img/preload.png">
 	<link rel="shortcut icon" href="favicon.ico" />
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&amp;subset=cyrillic" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="style.css?<?=$version;?>">
-	<script src="youtube_api.js"></script>
-	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-	<script src="socket.io.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/style.css?<?=app_version;?>">
 </head>
 <body>
 
-	<div id="changelist_button" data-version="<?=$version;?>"></div>
+	<div id="preload">
+		<div class="welcome">Welcome to PatyPlay</div>
+	</div>
+
+	<div id="darker"></div>
+	<div id="changelist_button" data-version="<?=app_version;?>"></div>
 	<div id="changelist">
 		<h1>Playon - Changelog</h1>
 		<div class="close"></div>
 
 		<div class="news">
+			<h2>Update 0.33<span>28.10.2017</span></h2>
+			<p>- Добавлена кнопка сохранить в настройках<br>
+			- Смайлики теперь тоже копируються</p>
+
+			<h2>Update 0.32<span>25.10.2017</span></h2>
+			<p>- Добавлен начальный загрузочный экран<br>
+			- Теперь нельзя открыть больше одной вкладки с плеером<br>
+			- Добавлен смайлик <b>KappaSlava</b>, <b>KeepoSlava</b>, ValakasSon<br>
+			- Теперь смайлы с надписью Blg будут читаться как Big</p>
+
+			<h2>Update 0.31<span>20.10.2017</span></h2>
+			<p>- Теперь при изменение громкости звука колёсиком мышки по видео, громкость будет изменяться по 3% (раньше 5%)<br>
+			- Теперь при нажатие на поделившееся изображение, оно открывается в новом окне<br>
+			- Ускоренно появляние отметки клика на видео</p>
+
 			<h2>Update 0.30<span>19.10.2017</span></h2>
 			<p>- Добавленна функция передачи кликов по видео. Для этого при зажатой кнопке CTRL нажмите на любую часть видео<br>
 			- Добавленно окно списка изменений версий<br>
-			- Изменены некоторые цвета на странице</p>
+			- Изменены некоторые цвета на странице<br>
+			- Перерисованна полоса перемотки<br>
+			- Исправлен баг в котором при наведение мыши на полосу перемотки, временная подсказка "прыгала" в начало полосы</p>
 
 			<h2>Update 0.29<span>16.10.2017</span></h2>
 			<p>- Новые смайлы: Naruto, KappaNinja, KappaSoldier, Wow, Love, Slow, Wut, Frog, Illuminati, FroggyOmg, FroggySleep, FroggyCry, MegaRofl, KappaWatch<br>
@@ -104,17 +124,24 @@
 
 
 	<div id="loader">
-		<div>
+		<div class="wrap">
 			<h1>Enter you nickname:</h1>
 			<div class="inputs">
 				<input type="text" class="nickname" maxlength="11">
 				<input type="color" class="color">
 			</div>
-			<button>CANCEL</button>
+
+			<div class="buttons">
+				<button class="save">SAVE</button>
+				<button class="close">CLOSE</button>
+			</div>
 		</div>
 	</div>
 
-<script src="main.js?<?=$version;?>"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="/js/youtube_api.js"></script>
+<script src="/js/socket.io.js"></script>
+<script src="/js/main.js?<?=app_version;?>"></script>
 
 </body>
 </html>

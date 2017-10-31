@@ -100,12 +100,12 @@ a {
 }
 #page #timer .back {
 	left: -28px;
-	background-image: url("img/rewind_back.png");
+	background-image: url("../img/rewind_back.png");
 	border-bottom-left-radius: 5px;
 }
 #page #timer .forward {
 	right: -28px;
-	background-image: url("img/rewind_forward.png");
+	background-image: url("../img/rewind_forward.png");
 	border-bottom-right-radius: 5px;
 }
 
@@ -135,29 +135,49 @@ a {
 	width: 0%;
 	background: #5e2b74;/*#8e44ad;*/
 }
-#page #timeline .time {
-	display: none;
+#page #timeline .line::after {
+	content: '';
+	width: 2px;
+	background-color: white;
 	position: absolute;
-	top: -27px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+}
+#page #timeline .time {
+	/* display: none; */
+	line-height: 1;
+	position: absolute;
+	top: -24px;
 	padding: 4px 15px;
-	background: #333;
+	background: #fff;
 	width: 70px;
 	box-sizing: border-box;
 	text-align: center;
-	color: white;
-	font-size: 12px;
-	left: 0px;
+	color: #000000;
+	font-size: 14px;
+	font-weight: 600;
+	left: calc(50% - 35px);
 	opacity: 0;
 	transition: opacity 0.5s;
-	border: 1px solid rgba(0,0,0,0.3);
+	border: 2px solid rgb(94, 43, 116);
 	border-bottom: none;
-	border-radius: 3px 3px 0px 0px;*/
+	border-radius: 4px 4px 0px 0px;*/
 	font-weight: 300;
-	opacity: 0.8;
 }
 #page #timeline:hover .time {
 	display: block;
 	opacity: 1;
+}
+#page #timeline .time::before {
+	content: '';
+	width: 8px;
+	height: 8px;
+	background-color: white;
+	transform: rotate(45deg);
+	position: absolute;
+	left: calc(50% - 4px);
+	top: calc(100% - 4px);
 }
 
 .dark #page #timeline {
@@ -175,7 +195,7 @@ a {
 	transform: translateX(-35px) translateY(-35px) scale(0);
 	border-radius: 100%;
 	border: 10px solid black;
-	transition: all 0.25s;
+	transition: all 0.15s;
 }
 #page .mark.start {
 	transform: translateX(-35px) translateY(-35px) scale(1);
@@ -255,15 +275,15 @@ a {
 
 
 #menu #play {
-	background-image: url("img/play.png");
+	background-image: url("../img/play.png");
 	background-color: #27ae60;
 }
 #menu #stop {
-	background-image: url("img/pause.png");
+	background-image: url("../img/pause.png");
 	background-color: #e67e22;
 }
 #menu #load {
-	background-image: url("img/load.png");
+	background-image: url("../img/load.png");
 	background-color: #2980b9;
 }
 
@@ -434,7 +454,7 @@ a {
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
-	background-image: url("img/setup.png");
+	background-image: url("../img/setup.png");
 	cursor: pointer;
 	transition: all 0.5s;
 }
@@ -451,7 +471,7 @@ a {
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center;
-	background-image: url("img/big.png");
+	background-image: url("../img/big.png");
 	cursor: pointer;
 	transition: all 0.5s;
 	opacity: 0.1;
@@ -590,6 +610,7 @@ a {
 	display: block;
 	margin: auto;
 	cursor: pointer;
+	margin-top: 4px;
 }
 #chat .messages div img.source:active,
 #chat .messages div img.source:focus {
@@ -604,6 +625,7 @@ a {
 	padding: 10px;
 	box-sizing: border-box;*/
 }
+
 
 #chat input {
 	background: #e5e5e5;
@@ -767,7 +789,7 @@ body.dark #playlist .list .item {
 	bottom: 0px;
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
-	background-image: url("img/play_list.png");
+	background-image: url("../img/play_list.png");
 	z-index: 99;
 }
 
@@ -780,7 +802,7 @@ body.dark #playlist .list .item {
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 	background-size: contain;
-	background-image: url("img/list_delete.png");
+	background-image: url("../img/list_delete.png");
 	opacity: 0.2;
 	transition: all 0.5s;
 	z-index: 100;
@@ -823,7 +845,7 @@ body.dark #playlist .list .item {
 	z-index: 100000;
 	display: none;
 }
-#loader div:not(.inputs) {
+#loader .wrap {
 	text-align: center;
 	padding: 40px;
 	background: white;
@@ -848,6 +870,7 @@ body.dark #playlist .list .item {
 	width: 100%;
 	box-sizing: border-box;
 	font-size: 18px;
+	border-radius: 5px;
 	text-align: center;
 }
 #loader .color {
@@ -857,24 +880,43 @@ body.dark #playlist .list .item {
 	height: 30px;
 	width: 30px;
 	padding: 2px;
+	border-radius: 6px;
 }
-#loader button {
-	width: 100%;
+#loader .buttons {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 10px;
+}
+#loader .buttons button {
+	flex: 0 49%;
+	width: 49%;
 	box-sizing: border-box;
 	padding: 8px;
 	border: 1px solid rgba(0,0,0,0.1);
 	border-radius: 3px;
-	margin-top: 10px;
+	font-size: 15px;
 	font-weight: 100;
-	background: #e74c3c;
+	background-color: #e74c3c;
 	color: white;
-	display: none;
 	cursor: pointer;
-	transition: all 0.5s;
+	transition: background-color 0.5s;
 }
+#loader .buttons button.save {
+	background-color: #27ae60;
+}
+#loader .buttons button.full {
+	width: 100%;
+	flex: 0 100%;
+}
+
 #loader button:hover {
-	background: #b73b2f;
+	background-color: #b73b2f;
 }
+#loader button.save:hover {
+	background-color: #1B974F;
+}
+
 
 
 
@@ -888,7 +930,7 @@ body.dark #playlist .list .item {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: 25px;
-	background-image: url("img/changelist_black.png");
+	background-image: url("../img/changelist_black.png");
 	/*background-color: rgba(0,0,0,0.025);*/
 	border-radius: 100%;
 	border: 1px solid rgba(0,0,0,0.1);
@@ -897,7 +939,7 @@ body.dark #playlist .list .item {
 }
 .dark #changelist_button {
 	background-color: #151515;
-	background-image: url("img/changelist_white.png");
+	background-image: url("../img/changelist_white.png");
 }
 body #changelist_button.new {
 	animation: new_change 1s infinite alternate;
@@ -913,6 +955,17 @@ body #changelist_button.new {
 	}
 }
 
+
+#darker {
+	display: none;
+	position: fixed;
+	z-index: 150000;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	background-color: rgba(0,0,0,0.9);
+}
 
 #changelist {
 	display: none;
@@ -939,13 +992,14 @@ body #changelist_button.new {
 	font-weight: 400;
 	padding: 10px;
 	padding-bottom: 25px;
+	padding-top: 15px;
 	background: linear-gradient(to top, rgba(252,252,252,0) 0%,rgb(38, 142, 211) 100%);
 	text-shadow: 0px 1px 2px rgba(0,0,0,0.25);
 }
 #changelist .close {
 	position: absolute;
 	right: 19px;
-	top: 19px;
+	top: 25px;
 	background-image: url("/img/list_delete.png");
 	background-repeat: no-repeat;
 	background-size: 26px;
@@ -958,7 +1012,7 @@ body #changelist_button.new {
 	transform: rotate(180deg);
 }
 #changelist .news {
-	height: 500px;
+	height: 495px;
 	overflow: auto;
 	width: calc(100% + 10px);
 	padding-right: 10px;
@@ -1001,6 +1055,32 @@ body #changelist_button.new {
 	border-radius: 6px;
 }
 
+
+#preload {
+	background-color: white;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 25%;	
+	background-image: url("/img/preload.png");
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	opacity: 1;
+	z-index: 999999999;
+}
+#preload .welcome {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 4vw;
+	font-size: 4vw;
+	font-weight: 100;
+	font-family: "Open Sans";
+	text-align: center;
+	color: #333;
+}
 
 
 

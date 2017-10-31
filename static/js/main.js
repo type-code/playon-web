@@ -12,10 +12,10 @@ var new_messages = 0;
 var window_blur = false;
 var window_title = document.title;
 var connetion_step = 0;
-var MessageSound = new Audio("message.mp3");
+var MessageSound = new Audio("/assets/message.mp3");
 var played = false;
-var ww = null;
 
+const HOST = document.location.origin;
 const MSG_MAX = 150;
 
 window.onblur = function() {
@@ -29,13 +29,20 @@ window.onfocus = function() {
 		new_messages = 0;
 }
 
+window.onstorage = function(e) {
+	if (e.oldValue > 10000)
+		console.log(e);
+
+	document.location.pathname = "/tabs";
+}
+
 
 //function onYouTubeIframeAPIReady() {
 //$(document).ready(function(){
 	function onYouTubeIframeAPIReady() {
 		if (nick) {
 			connetion_step = 1;
-			player = new YT.Player('player', {
+			player = new YT.Player("player", {
 				playerVars: { 
 					iv_load_policy: 3,
 					autoplay: 0, 
@@ -47,13 +54,17 @@ window.onfocus = function() {
 					onReady: player_init
 				}
 			});
-	   }
+		}
 		else {
 			console.log("Enter you Nick!");
 			$("#loader").fadeIn("slow");
 			$("#loader").css("display", "flex");
-			$("#loader button").hide();
+			$("#loader .close").hide();
+			$("#loader .save").addClass("full");
 		}
+
+		$("#preload").fadeOut(500);
+		localStorage.last_visit = new Date().getTime();
 	}
 //});
 //}
@@ -75,8 +86,7 @@ function player_init() {
 
 
 function socket_init() {
-	var host = "ws://chrom-web.ga";//document.location.origin;
-	socket = io(host + ":8080/");
+	socket = io(HOST + ":8080/");
 
 	socket.on("connected", function(data){
 		var video_url = data.video;
@@ -169,17 +179,24 @@ function socket_init() {
 			image.attr("src", source);
 			image.addClass("source");
 			image.click(function(){
-				//console.log(source);
-				// ww = window.open('about:blank');
-				// 	ww.document.location.href = source;
+				var w = window.open('about:blank');
+				var s = source;
 
-				// setTimeout(function(){
-				// 	ww.document.write = `<img src='${source}'>`;
-				// 	console.log(`<img src='${source}'>`);
-				// 	ww.document.location.href = source;
-				// 	ww.location.href = source;
-				// 	ww.document.URL = source;
-				// }, 1000);
+				setTimeout(function(){ 
+					var elem = w.document.createElement('img');
+					elem.style.maxWidth = "100%";
+					elem.style.maxHeight = "100%";
+					elem.style.borderRadius = "5px";
+					elem.style.padding = "5px";
+					elem.style.background = "white";
+					elem.style.boxShadow = "0px 10px 100px 0px black";
+					w.document.body.appendChild(elem).src = s;
+					w.document.body.style.padding = "0px";
+					w.document.body.style.margin = "0px";
+					w.document.body.style.display = "flex";
+					w.document.body.style.justifyContent = "center";
+					w.document.body.style.alignItems = "center";
+				}, 0);
 			});
 
 		var div = $("<div></div>");
@@ -245,7 +262,7 @@ function socket_init() {
 
 		setTimeout(function(){
 			mark.addClass("reduction");
-		}, 1500);
+		}, 1250);
 
 		setTimeout(function(){
 			mark.remove();
@@ -268,7 +285,7 @@ function socket_init() {
 
 	socket.on("join", system_message);
 	socket.on("disc", system_message);
-	socket.on("rename", system_message);
+	socket.on("rename", system_message);	
 
 	function system_message(data) {
 		var nick = data.nick;
@@ -347,30 +364,35 @@ function socket_init() {
 	///////////////////////////////////
 	// SMILES GENERATE REGEXP's ///////
 	var smiles_buff = [ 
-		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "Valakas", "Kombik", "Godzila", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "MegaRofl", "Rofl"
+		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "MegaRofl", "Rofl"
 	], smiles = [];
 
 	for(var a in smiles_buff) {
 		var smile = smiles_buff[a];
-		var s1 = new RegExp(smile, "g");
-		var s2 = new RegExp(smile + "Big", "g");
+		var s1 = new RegExp(smile + " ", "g");
+		var s2 = new RegExp(smile + "Big ", "g");
+		var s3 = new RegExp(smile + "Blg ", "g");
+		smiles.push(s3);
 		smiles.push(s2);
 		smiles.push(s1);
 	}
 	////////////////////////////////////
 
 	function checkSmiles(text) {
+		if (text.slice(-1) != " ") text += " ";
+
 		for(var a in smiles) {
 			var smile = smiles[a];
 			var smile_clear = String(smile).replace("/","").replace("/g", "");
-			var smile_lower = smile_clear.toLocaleLowerCase();
-			var sss = smile_clear;
+			var smile_lower = smile_clear.toLocaleLowerCase().replace(" ", "");
+			var title = smile_clear;
 
-			if (smile_clear.indexOf("Big") == -1)
-				var file = `<img src='img/s/${smile_lower}.png'>`;
+			if (smile_clear.indexOf("Big") == -1 && smile_clear.indexOf("Blg") == -1)
+				var file = `<img src='img/s/${smile_lower}.png' alt='${title}'>`;
 			else {
-				smile_lower = smile_lower.replace("big", "");
-				var file = `<img src='img/s/${smile_lower}.png' class='big'>`;
+				smile_lower = smile_lower.replace("big", "")
+				smile_lower = smile_lower.replace("blg", "");
+				var file = `<img src='img/s/${smile_lower}.png' class='big' alt='${title}'>`;
 				//console.log(smile, smile_clear, smile_lower, sss, file);
 			}
 
@@ -414,6 +436,7 @@ function socket_init() {
 	$("#chat .header .setup").click(function(){
 		$("#loader").fadeIn("slow").css("display", "flex");
 		$("#loader button").show();
+		$("#loader button.full").removeClass("full");
 		$("#loader .nickname").val(localStorage.player_nick);
 		$("#loader .color").val(localStorage.player_color);
 		return false;
@@ -423,11 +446,6 @@ function socket_init() {
 		$("#chat").toggleClass("big");
 		$(this).toggleClass("select");
 		return false;
-	});
-
-
-	$("#loader button").click(function(){
-		$("#loader").fadeOut("fast");
 	});
 
 
@@ -445,17 +463,23 @@ function socket_init() {
 	});
 
 	$("#timeline").mousemove(function(event){
-		var x = event.offsetX;
+		var x = event.originalEvent.layerX - 10;
 		var y = event.offsetY;
-		var max_x = $("#timeline").width();
+		var max_x = parseInt( $("#timeline").width() );
 
 		var duration = player.getDuration();
 		var rewind_percent = x / max_x;
+		if (rewind_percent < 0) rewind_percent = 0;
 		var rewind_seconds = Math.floor(duration * rewind_percent);
+		if (rewind_seconds > duration) rewind_seconds = duration;
 		var rewind_time = formatTime(rewind_seconds);
 		var rewind_position = (rewind_percent * max_x) - 35;
 
-		if (x >= 0 && x < max_x && y > 1 && y < 24) {
+		if (rewind_position < 0) rewind_position = 0;
+		if (x > max_x - 35) rewind_position = max_x - 70;
+
+		if (event.target.id == "timeline" || event.target.className == "line") {
+			if (event.target.className == "line") rewind_position += 10;
 			$(this).find(".time").css("left", rewind_position + "px");
 			$(this).find(".time").html(rewind_time);
 		}
@@ -487,10 +511,10 @@ function socket_init() {
 		var volume = parseInt($("#volume").val());
 		var newVolume = 0;
 		if(e.originalEvent.wheelDelta < 0) {
-			newVolume = volume - 5;
+			newVolume = volume - 3;
 		} 
 		else {
-			newVolume = volume + 5;
+			newVolume = volume + 3;
 		}
 
 		if (newVolume < 0) newVolume = 0;
@@ -546,15 +570,17 @@ function socket_init() {
 
 
 	setInterval(function(){
-		var current_clear = player.getCurrentTime();
-		var duration_clear = player.getDuration();
-		var current = formatTime(current_clear);
-		var duration = formatTime(duration_clear);
-		$("#timer .current").html(current);
-		$("#timer .duration").html(duration);
+		if (played) {
+			var current_clear = player.getCurrentTime();
+			var duration_clear = player.getDuration();
+			var current = formatTime(current_clear);
+			var duration = formatTime(duration_clear);
+			$("#timer .current").html(current);
+			$("#timer .duration").html(duration);
 
-		var dir = (current_clear / duration_clear) * 100;
-		$("#timeline .line").css("width", dir + "%");
+			var dir = (current_clear / duration_clear) * 100;
+			$("#timeline .line").css("width", dir + "%");
+		}
 	}, 500);
 
 
@@ -613,6 +639,30 @@ $("#loader .nickname").keyup(function(event){
 	return false;
 });
 
+$("#loader .save").click(function(){
+	var new_nick = $("#loader .nickname").val();
+	var color = $("#loader .color").val();
+	var old_nick = nick;
+	localStorage.player_nick = new_nick;
+	localStorage.player_color = color;
+	nick = localStorage.player_nick;
+
+	if (socket) {
+		if (new_nick != old_nick)
+		socket.emit("rename", {old_nick, new_nick});
+	}
+	else {
+		onYouTubeIframeAPIReady();
+	}
+
+	$("#loader").fadeOut("slow").css("display", "none");
+});
+
+$("#loader .close").click(function(){
+	$("#loader").fadeOut("fast");
+});
+
+
 $("#chat .header").click(function(){
 	$("#chat").toggleClass("active");
 	new_messages = 0;
@@ -635,12 +685,14 @@ $("#playlist .header").click(function(){
 
 
 $("#changelist_button").click(function(){
+	$("#darker").fadeIn(500);
 	$("#changelist").fadeIn(500);
 	$("#changelist_button").removeClass("new");
 	localStorage.player_version = $(this).data("version");
 });
 
 $("#changelist .close").click(function(){
+	$("#darker").fadeOut(500);
 	$("#changelist").fadeOut(500);
 });
 

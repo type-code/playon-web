@@ -1,0 +1,25 @@
+{
+  "name": "patyplay_webserver",
+  "version": "1.0.0",
+  "description": "PatyPlay - WebServer",
+  "main": "core.js",
+  "scripts": {
+    "test": "node core.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/type-code/playon-web.git"
+  },
+  "author": "CHROM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/type-code/playon-web/issues"
+  },
+  "homepage": "https://github.com/type-code/playon-web#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "colors": "^1.1.2",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2"
+  }
+}
