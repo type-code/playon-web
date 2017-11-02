@@ -5,6 +5,10 @@ class Api {
 		this.config = config;
 	}
 
+	set cfg(cfg) {
+		this.config = cfg;
+	}
+
 	smiles() {
 		var json = {
 			varsion: this.config.version_smiles,

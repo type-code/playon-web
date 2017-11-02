@@ -1,6 +1,6 @@
 var Controller = require("./Controller.js");
+var Api = require("./Api.js");
 var fs = require("fs");
-var Api = null;
 
 class Router extends Controller {
 	constructor(app, config) {
@@ -8,7 +8,7 @@ class Router extends Controller {
 		this.app = app;
 		this.config = config;
 
-		Api = new (require("./Api.js"))(config);
+		this.Api = new Api(config);
 	}
 
 	// ROUTING: patyplay.ga/
@@ -27,32 +27,34 @@ class Router extends Controller {
 	}
 
 
-	// ROUTING: patyplay.ga/api/version
+	// ROUTING: patyplay.ga/api/versions
 	// ROUTING: patyplay.ga/api/smiles
 	api() {
 		this.app.get("/api/versions", (req, res) => {
-			var version = Api.version();
-			res.json(version).end();
+			var versions = this.Api.versions();
+			res.json(versions).end();
 		});
 
 		this.app.get("/api/smiles", (req, res) => {
-			var smiles = Api.smiles();
+			var smiles = this.Api.smiles();
 			res.json(smiles).end();
 		});
 	}
 
 
-	// ROUTING: patyplay.ga/404
+	
 	system() {
 		this.app.get("/system/config", (req, res) => {
 			fs.readFile(__dirname + "/../config.json", "utf8", (e, config) => {
 				this.config = JSON.parse(config);
+				this.Api.cfg = this.config;
 				var time = this.consoleTime();
 				console.log(`# Config updated! ${time}`.yellow);
 				res.send("success update");
 			});
 		});
 
+		// ROUTING: patyplay.ga/404
 		this.app.get("*", (req, res) => {
 			res.render("404");
 		});
