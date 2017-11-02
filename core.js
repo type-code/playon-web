@@ -1,7 +1,7 @@
 const express = require("express");
 const colors = require("colors");
 const ejs = require("ejs");
-//const config = require("./config.json");
+const config = require("./config.json");
 const bodyParser = require("body-parser")
 
 
@@ -11,7 +11,7 @@ const app = express();
 
 
 // CLASSES
-var Router = new (require("./classes/Router.js"))(app);
+var Router = new (require("./classes/Router.js"))(app, config);
 
 
 // SETTINGS
@@ -28,9 +28,10 @@ ejs.delimiter = '?';
 Router.api();
 Router.home();
 Router.tabs();
+Router.system();
 
 
 // STARTING
 app.listen(81, () => {
-	console.log("# PatyPlay - WebServer [81] [Proxy to 80]".green);
+	console.log("# PatyPlay - WebServer [81] [Proxy from 80]".green);
 });

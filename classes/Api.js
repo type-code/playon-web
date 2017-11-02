@@ -1,16 +1,14 @@
 class Api {
-	constructor() {
-		this.smiles_buff = [ "KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "MegaRofl", "Rofl" ];
+	constructor(config) {
+		this.smiles_buff = [ "KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "MegaRofl", "Rofl" ];
 
-		this.VERSION_SMILES = 5;
-		this.VERSION_API = 1;
-		this.SMILES_PATH = "http://patyplay.ga/img/s/";
+		this.config = config;
 	}
 
 	smiles() {
 		var json = {
-			varsion: this.VERSION_SMILES,
-			server: this.SMILES_PATH,
+			varsion: this.config.version_smiles,
+			server: this.config.smiles_path,
 			smiles: [],
 		};
 
@@ -27,10 +25,12 @@ class Api {
 		return json;
 	}
 
-	version() {
+	versions() {
 		var json = {
-			version_api: this.VERSION_API,
-			version_smiles: this.VERSION_SMILES
+			version_api: this.config.version_api,
+			version_app_web: this.config.version_app_web,
+			version_app_android: this.config.version_app_android,
+			version_smiles: this.config.version_smiles
 		}
 
 		return json;

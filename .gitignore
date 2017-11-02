@@ -4,3 +4,4 @@ node_modules/
 *.sublime-project
 sftp-config.json
 package-lock.json
+config.json

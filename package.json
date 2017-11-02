@@ -1,10 +1,11 @@
 {
-  "name": "patyplay_webserver",
+  "name": "patyplay-webserver",
   "version": "1.0.0",
-  "description": "PatyPlay - WebServer",
+  "description": "PatyPlay - Web Server",
   "main": "core.js",
   "scripts": {
-    "test": "node core.js"
+    "test": "node core.js",
+    "run": "cls & node core.js"
   },
   "repository": {
     "type": "git",
