@@ -4,7 +4,6 @@
   "description": "PatyPlay - Web Server",
   "main": "core.js",
   "scripts": {
-    "test": "node core.js",
     "run": "cls & node core.js"
   },
   "repository": {
