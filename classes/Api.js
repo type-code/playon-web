@@ -1,23 +1,16 @@
-const Controller = require("./Controller.js");
-
 class Api extends Controller {
 	constructor(config, db) {
 		super();
 
 		this.smiles_buff = [ "KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "RoflEpic", "RoflMega", "Rofl" ];
 
-		this.config = config;
 		this.db = db;
-	}
-
-	set cfg(cfg) {
-		this.config = cfg;
 	}
 
 	smiles() {
 		var json = {
-			varsion: this.config.version_smiles,
-			server: this.config.smiles_path,
+			varsion: config.version_smiles,
+			server: config.smiles_path,
 			smiles: [],
 		};
 
@@ -36,10 +29,10 @@ class Api extends Controller {
 
 	versions() {
 		var json = {
-			version_api: this.config.version_api,
-			version_app_web: this.config.version_app_web,
-			version_app_android: this.config.version_app_android,
-			version_smiles: this.config.version_smiles
+			version_api: config.version_api,
+			version_app_web: config.version_app_web,
+			version_app_android: config.version_app_android,
+			version_smiles: config.version_smiles
 		}
 
 		return json;

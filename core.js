@@ -2,19 +2,28 @@ const express = require("express");
 const colors = require("colors");
 const ejs = require("ejs");
 const config = require("./config.json");
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
+
+// GLOBALS
+global.Controller = require("./classes/Controller.js");
+global.config = require("./config.json");
+
+
+// CLASSES
+const ConnectorClass = require("./classes/Connector.js");
+const DatabaseClass = require("./classes/Database.js");
+const RouterClass = require("./classes/Router.js");
 
 
 // VARIABLES
 const DIR = __dirname;
 const app = express();
-const PORT_WEB = 8000;
-const PORT_SOCKET = 8080;
+const PORT_WEB = config.port_web;
+const PORT_SOCKET = config.port_socket;
 
-// CLASSES
-var Connector = new (require("./classes/Connector.js"))(PORT_SOCKET);
-var Database = new (require("./classes/Database.js"))(config);
-var Router = new (require("./classes/Router.js"))(app, config, Database, Connector);
+var Database = new DatabaseClass();
+var Connector = new ConnectorClass(PORT_SOCKET);
+var Router = new RouterClass(app, Database, Connector);
 
 // SETTINGS
 app.use(express.static(DIR + "/static"));

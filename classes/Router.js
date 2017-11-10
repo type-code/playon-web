@@ -1,22 +1,20 @@
-var Controller = require("./Controller.js");
 var Api = require("./Api.js");
 var fs = require("fs");
 
 class Router extends Controller {
-	constructor(app, config, Database, Connector) {
+	constructor(app, Database, Connector) {
 		super();
 		this.app = app;
-		this.config = config;
-		this.database = Database;
-		this.connector = Connector;
+		this.Database = Database;
+		this.Connector = Connector;
 
-		this.Api = new Api(config, this.database);
+		this.Api = new Api(config, this.Database);
 	}
 
 	// ROUTING: patyplay.ga/
 	home() {
 		this.app.get("/", (req, res) => {
-			res.render("index", {version: this.config.version_app_web});
+			res.render("index", {version: config.version_app_web});
 		});
 	}
 
@@ -24,7 +22,7 @@ class Router extends Controller {
 	// ROUTING: patyplay.ga/tabs
 	tabs() {
 		this.app.get("/tabs", (req, res) => {
-			res.render("tabs", {version: this.config.version_app_web});
+			res.render("tabs", {version: config.version_app_web});
 		});
 	}
 
@@ -61,12 +59,11 @@ class Router extends Controller {
 	}
 
 	
-	
+
 	system() {
 		this.app.get("/system/config", (req, res) => {
-			fs.readFile(__dirname + "/../config.json", "utf8", (e, config) => {
-				this.config = JSON.parse(config);
-				this.Api.cfg = this.config;
+			fs.readFile(__dirname + "/../config.json", "utf8", (e, cfg) => {
+				global.config = JSON.parse(cfg);
 				var time = this.consoleTime();
 				console.log(`# Config updated! ${time}`.yellow);
 				res.send("success update");

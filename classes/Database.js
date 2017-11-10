@@ -2,7 +2,7 @@ var MongoClient = require("mongodb").MongoClient;
 var ObjectID = require("mongodb").ObjectID;
 
 class Database {
-    constructor(config) {
+    constructor() {
         var host = config.db_host;
         var user = config.db_user;
         var pass = config.db_pass;
