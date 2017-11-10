@@ -8,11 +8,13 @@ const bodyParser = require("body-parser")
 // VARIABLES
 const DIR = __dirname;
 const app = express();
-
+const PORT_WEB = 8000;
+const PORT_SOCKET = 8080;
 
 // CLASSES
-var Router = new (require("./classes/Router.js"))(app, config);
-
+var Connector = new (require("./classes/Connector.js"))(PORT_SOCKET);
+var Database = new (require("./classes/Database.js"))(config);
+var Router = new (require("./classes/Router.js"))(app, config, Database, Connector);
 
 // SETTINGS
 app.use(express.static(DIR + "/static"));
@@ -32,6 +34,6 @@ Router.system();
 
 
 // STARTING
-app.listen(81, () => {
-	console.log("# PatyPlay - WebServer [81] [Proxy from 80]".green);
+app.listen(PORT_WEB, () => {
+	console.log(`# PatyPlay - WebServer [${PORT_WEB}] [Proxy from 80]`.green);
 });

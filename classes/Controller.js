@@ -1,3 +1,5 @@
+const htmlspecialchars = require("htmlspecialchars");
+
 class Controller {
 	getUnixTime() {
 		return Math.floor(new Date().getTime() / 1000);
@@ -22,6 +24,10 @@ class Controller {
 
 	zeroAdd(numb) {
 		return (numb > 9 ? numb : "0" + numb);
+	}
+
+	html(text) {
+		return htmlspecialchars(text);
 	}
 }
 

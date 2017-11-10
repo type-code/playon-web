@@ -14,6 +14,7 @@ var window_title = document.title;
 var connetion_step = 0;
 var MessageSound = new Audio("/assets/message.mp3");
 var played = false;
+var room = "default";
 
 const HOST = document.location.origin;
 const MSG_MAX = 150;
@@ -37,37 +38,33 @@ window.onstorage = function(e) {
 }
 
 
-//function onYouTubeIframeAPIReady() {
-//$(document).ready(function(){
-	function onYouTubeIframeAPIReady() {
-		if (nick) {
-			connetion_step = 1;
-			player = new YT.Player("player", {
-				playerVars: { 
-					iv_load_policy: 3,
-					autoplay: 0, 
-					controls: 0, 
-					showinfo: 0, 
-					rel: 0
-				},
-				events: {
-					onReady: player_init
-				}
-			});
-		}
-		else {
-			console.log("Enter you Nick!");
-			$("#loader").fadeIn("slow");
-			$("#loader").css("display", "flex");
-			$("#loader .close").hide();
-			$("#loader .save").addClass("full");
-		}
-
-		$("#preload").fadeOut(500);
-		localStorage.last_visit = new Date().getTime();
+function onYouTubeIframeAPIReady() {
+	if (nick) {
+		connetion_step = 1;
+		player = new YT.Player("player", {
+			playerVars: { 
+				iv_load_policy: 3,
+				autoplay: 0, 
+				controls: 0, 
+				showinfo: 0, 
+				rel: 0
+			},
+			events: {
+				onReady: player_init
+			}
+		});
 	}
-//});
-//}
+	else {
+		console.log("Enter you Nick!");
+		$("#loader").fadeIn("slow");
+		$("#loader").css("display", "flex");
+		$("#loader .close").hide();
+		$("#loader .save").addClass("full");
+	}
+
+	$("#preload").fadeOut(500);
+	localStorage.last_visit = new Date().getTime();
+}
 
 
 function player_init() {
@@ -88,7 +85,11 @@ function player_init() {
 function socket_init() {
 	socket = io(HOST + ":8080/");
 
-	socket.on("connected", function(data){
+	socket.on("connect", function(){
+		socket.emit("join", {nick: nick, room: room})
+	});
+
+	socket.on("joined", function(data){
 		var video_url = data.video;
 		var time = data.time;
 		played = data.play;
@@ -101,12 +102,7 @@ function socket_init() {
 			player.cueVideoById(video_url, time + delta);
 		}
 		video = video_url;
-		
-		var light = data.light;
-		changeLight(light);
-
-		// CALLBACK TO JOIN SERVER
-		socket.emit("join", {nick});
+		changeLight(data.light);
 	});
 
 	socket.on("disconnect", function(data){
@@ -364,7 +360,7 @@ function socket_init() {
 	///////////////////////////////////
 	// SMILES GENERATE REGEXP's ///////
 	var smiles_buff = [ 
-		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "MegaRofl", "Rofl"
+		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "RoflEpic", "RoflMega", "Rofl"
 	], smiles = [];
 
 	for(var a in smiles_buff) {
@@ -789,4 +785,3 @@ $(document).ready(function(){
 		}, 2000);
 	}, 2000);
 });
-

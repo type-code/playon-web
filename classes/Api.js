@@ -1,8 +1,13 @@
-class Api {
-	constructor(config) {
-		this.smiles_buff = [ "KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "MegaRofl", "Rofl" ];
+const Controller = require("./Controller.js");
+
+class Api extends Controller {
+	constructor(config, db) {
+		super();
+
+		this.smiles_buff = [ "KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "RoflEpic", "RoflMega", "Rofl" ];
 
 		this.config = config;
+		this.db = db;
 	}
 
 	set cfg(cfg) {
@@ -38,6 +43,41 @@ class Api {
 		}
 
 		return json;
+	}
+
+	room_list(cb) {
+		this.db.conn.collection("rooms").find({}).toArray((e, data) => {
+			cb(data);
+		});
+	}
+
+	room_create(insert, cb) {
+		if (insert.name > 30) 
+		insert.name = insert.name.substr(0, 30);
+		insert.name = this.html(insert.name).trim();
+		insert.description = this.html(insert.description).trim();
+		insert.users = 0;
+		insert.users_max = 10;
+
+		if (insert.name == "system") {
+			cb(false);
+			return false;
+		}
+
+		this.db.conn.collection("rooms").findOne({"name": insert.name}, (e, data) => {
+			if (e) {
+				cb(false);
+				return false;
+			}
+
+			if (!data) {
+				this.db.conn.collection("rooms").insert(insert);
+				cb(true);
+			}
+			else {
+				cb(false);
+			}
+		});
 	}
 }
 

@@ -20,6 +20,9 @@
     "body-parser": "^1.18.2",
     "colors": "^1.1.2",
     "ejs": "^2.5.7",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "htmlspecialchars": "^1.0.5",
+    "mongodb": "^2.2.33",
+    "socket.io-client": "^2.0.4"
   }
 }
