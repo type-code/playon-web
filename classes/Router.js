@@ -4,11 +4,12 @@ var fs = require("fs");
 class Router extends Controller {
 	constructor(app, Database, Connector) {
 		super();
+		
 		this.app = app;
 		this.Database = Database;
 		this.Connector = Connector;
 
-		this.Api = new Api(config, this.Database);
+		this.Api = new Api(this.Database);
 	}
 
 	// ROUTING: patyplay.ga/

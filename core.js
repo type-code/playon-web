@@ -1,12 +1,12 @@
 const express = require("express");
 const colors = require("colors");
 const ejs = require("ejs");
-const config = require("./config.json");
+const config = require("../config.json");
 const bodyParser = require("body-parser");
 
 // GLOBALS
 global.Controller = require("./classes/Controller.js");
-global.config = require("./config.json");
+global.config = require("../config.json");
 
 
 // CLASSES
@@ -22,7 +22,7 @@ const PORT_WEB = config.port_web;
 const PORT_SOCKET = config.port_socket;
 
 var Database = new DatabaseClass();
-var Connector = new ConnectorClass(PORT_SOCKET);
+var Connector = new ConnectorClass();
 var Router = new RouterClass(app, Database, Connector);
 
 // SETTINGS

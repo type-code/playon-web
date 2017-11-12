@@ -1,4 +1,4 @@
-const htmlspecialchars = require("htmlspecialchars");
+var htmlspecialchars = require("htmlspecialchars");
 
 class Controller {
 	getUnixTime() {

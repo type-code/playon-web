@@ -144,6 +144,7 @@ function socket_init() {
 
 	socket.on("rewind", function(data){
 		var time = data.time;
+		data.type = "rewind";
 
 		player.seekTo(time, true);
 		system_message(data);
@@ -279,9 +280,18 @@ function socket_init() {
 		}
 	}
 
-	socket.on("join", system_message);
-	socket.on("disc", system_message);
-	socket.on("rename", system_message);	
+	socket.on("join", (data) => {
+		data.type = "join";
+		system_message(data);
+	});
+	socket.on("disc", (data) => {
+		data.type = "disc";
+		system_message(data);
+	});
+	socket.on("rename", (data) => {
+		data.type = "rename";
+		system_message(data);
+	});	
 
 	function system_message(data) {
 		var nick = data.nick;
