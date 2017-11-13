@@ -162,7 +162,7 @@ a {
 	transition: opacity 0.5s;
 	border: 2px solid rgb(94, 43, 116);
 	border-bottom: none;
-	border-radius: 4px 4px 0px 0px;*/
+	border-radius: 4px 4px 0px 0px;
 	font-weight: 300;
 }
 #page #timeline:hover .time {
@@ -435,7 +435,7 @@ a {
 #chat.active .header {margin-bottom: 10px;}
 #chat .header .new {
 	position: absolute;
-	left: 10px;
+	left: calc(50% - 50px);
 	top: calc(50% - 12px);
 	border-radius: 200px;
 	background: #8e44ad;
@@ -474,7 +474,7 @@ a {
 	background-image: url("../img/big.png");
 	cursor: pointer;
 	transition: all 0.5s;
-	opacity: 0.1;
+	opacity: 0.25;
 	padding: 5px 10px;
 	border-radius: 3px;
 }
@@ -482,8 +482,70 @@ a {
 	transform: scale(1.25);
 }
 #chat .header .big.select {
-	opacity: 1;
 	background-color: rgba(255,255,255,0.1);
+	opacity: 1;
+}
+
+#chat .header .users {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: 15px;
+	top: calc(50% - 10px);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	background-image: url("../img/users.png");
+	cursor: pointer;
+	transition: all 0.5s;
+	opacity: 0.25;
+}
+#chat .header .users:hover {
+	transform: scale(1.25);
+}
+#chat .header .users.select {
+	/*background-color: rgba(255,255,255,0.1);*/
+	opacity: 1;
+}
+
+#chat .users_list {
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.5s;
+	position: absolute;
+	top: 50px;
+	left: 10px;
+	right: 10px;
+	bottom: 10px;
+	background: #f5f5f5;
+	color: #333;
+	border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.2);
+	overflow-y: auto;
+}
+#chat .users_list.show {
+	opacity: 1;
+	visibility: visible;
+}
+#chat .users_list .user {
+	padding: 8px 15px;
+	font-weight: 100;
+	font-size: 14px;
+	text-align: left;
+	border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+#chat .users_list .user span {
+	display: inline-block;
+	width: 13px;
+	height: 13px;
+	vertical-align: middle;
+	border-radius: 100%;
+	background-color: #2ecc71;
+	margin-right: 10px;
+	margin-top: -2px;
+}
+#chat .users_list .user span.false {
+	background-color: #e74c3c;
 }
 
 #chat .messages {
@@ -650,6 +712,10 @@ a {
 	background-color: rgba(255,255,255,0.0125);
 	color: white;
 }
+.dark #chat .users_list {
+	background: #1a1a1a;
+	color: white;
+}
 .dark #chat input {
 	background-color: rgba(255,255,255,0.04);
 	color: white;
@@ -671,6 +737,24 @@ a {
 }
 #chat .messages:hover::-webkit-scrollbar-thumb {
 	background: rgba(0, 0, 0, 0.15);
+}
+
+
+#chat .users_list::-webkit-scrollbar {
+	width: 6px;
+}
+#chat .users_list::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.05);
+	transition: all 0.5s;
+}
+#chat .users_list::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.15);
+}
+#chat .users_list:hover::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.075);
+}
+#chat .users_list:hover::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.225);
 }
 
 

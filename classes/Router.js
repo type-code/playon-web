@@ -63,11 +63,11 @@ class Router extends Controller {
 
 	system() {
 		this.app.get("/system/config", (req, res) => {
-			fs.readFile(__dirname + "/../config.json", "utf8", (e, cfg) => {
+			fs.readFile("../config.json", "utf8", (e, cfg) => {
 				global.config = JSON.parse(cfg);
 				var time = this.consoleTime();
 				console.log(`# Config updated! ${time}`.yellow);
-				res.send("success update");
+				res.send("success update").status(200).end();
 			});
 		});
 

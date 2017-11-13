@@ -15,19 +15,21 @@ var connetion_step = 0;
 var MessageSound = new Audio("/assets/message.mp3");
 var played = false;
 var room = "default";
+var users = {};
 
 const HOST = document.location.origin;
 const MSG_MAX = 150;
 
 window.onblur = function() {
 	window_blur = true;
+	if (socket) socket.emit("focus_toggle", {focus: false});
 }
 
 window.onfocus = function() {
 	window_blur = false;
 	document.title = window_title;
-	if ( $("#chat").hasClass("active") )
-		new_messages = 0;
+	if ( $("#chat").hasClass("active") ) new_messages = 0;
+	if (socket) socket.emit("focus_toggle", {focus: true});
 }
 
 window.onstorage = function(e) {
@@ -103,9 +105,15 @@ function socket_init() {
 		}
 		video = video_url;
 		changeLight(data.light);
+
+		for(var u in data.users) {
+			var user = data.users[u];
+			users[user.nick] = user;
+		}
+		usersRedraw();
 	});
 
-	socket.on("disconnect", function(data){
+	socket.on("disconnect", (data) => {
 		system_message({type: "disconnect"});
 	});
 
@@ -283,11 +291,27 @@ function socket_init() {
 	socket.on("join", (data) => {
 		data.type = "join";
 		system_message(data);
+
+		users[data.nick] = {
+			nick: data.nick,
+			focus: true
+		}
+		usersRedraw();
 	});
+
+	socket.on("focus_toggle", (data) => {
+		users[data.nick].focus = data.focus;
+		usersRedraw();
+	});
+
 	socket.on("disc", (data) => {
 		data.type = "disc";
 		system_message(data);
+
+		delete users[data.nick];
+		usersRedraw();
 	});
+
 	socket.on("rename", (data) => {
 		data.type = "rename";
 		system_message(data);
@@ -408,6 +432,20 @@ function socket_init() {
 		return text;
 	}
 
+	function usersRedraw() {
+		$("#chat .users_list").empty();
+
+		for(var u in users) {
+			var user = users[u];
+			var item = $("<div></div>");
+				item.addClass("user");
+				item.append(`<span class="${user.focus}"></span>`);
+				item.append(user.nick);
+				item.data("nick", user.nick);
+				item.appendTo("#chat .users_list");
+		}
+	}
+
 	/////////////////////////////////////////////
 
 
@@ -450,6 +488,12 @@ function socket_init() {
 
 	$("#chat .header .big").click(function(){
 		$("#chat").toggleClass("big");
+		$(this).toggleClass("select");
+		return false;
+	});
+
+	$("#chat .header .users").click(function(){
+		$("#chat .users_list").toggleClass("show");
 		$(this).toggleClass("select");
 		return false;
 	});
