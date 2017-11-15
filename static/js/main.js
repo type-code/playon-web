@@ -15,9 +15,9 @@ var connetion_step = 0;
 var MessageSound = new Audio("/assets/message.mp3");
 var played = false;
 var room = "default";
-var users = {};
+var users = [];
 
-const HOST = document.location.origin;
+const HOST = document.location.hostname;
 const MSG_MAX = 150;
 
 window.onblur = function() {
@@ -109,6 +109,7 @@ function socket_init() {
 		for(var u in data.users) {
 			var user = data.users[u];
 			users[user.nick] = user;
+			users.length = data.users.length;
 		}
 		usersRedraw();
 	});
@@ -296,18 +297,23 @@ function socket_init() {
 			nick: data.nick,
 			focus: true
 		}
+
+		if (data.nick != nick)
+			users.length++;
+
 		usersRedraw();
 	});
 
 	socket.on("focus_toggle", (data) => {
 		users[data.nick].focus = data.focus;
-		usersRedraw();
+		onlineRedraw(data.nick, data.focus);
 	});
 
 	socket.on("disc", (data) => {
 		data.type = "disc";
 		system_message(data);
 
+		users.length--;
 		delete users[data.nick];
 		usersRedraw();
 	});
@@ -437,13 +443,24 @@ function socket_init() {
 
 		for(var u in users) {
 			var user = users[u];
+			var online = users[nick].focus ? 'Watching video' : 'Does watch video';
 			var item = $("<div></div>");
 				item.addClass("user");
-				item.append(`<span class="${user.focus}"></span>`);
+				item.append(`<span class="${user.focus}" title="${online}"></span>`);
 				item.append(user.nick);
-				item.data("nick", user.nick);
+				item.attr("data-nick", user.nick);
 				item.appendTo("#chat .users_list");
 		}
+		
+		$("#chat .header .users i").html(users.length);
+	}
+
+	function onlineRedraw(nick, focus) {
+		var online = users[nick].focus ? 'Watching video' : 'Does watching video';
+		var user = $(`#chat .users_list .user[data-nick='${nick}']`);
+			user.find("span").removeClass(String(!focus));
+			user.find("span").addClass(String(focus));
+			user.find("span").attr("title", online);
 	}
 
 	/////////////////////////////////////////////

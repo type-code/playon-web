@@ -416,6 +416,12 @@ a {
 #chat.active {
 	height: 400px;
 }
+#chat.active input {
+	display: block;
+}
+#chat.active .messages {
+	height: calc(100% - 70px);
+}
 #chat.big {
 	width: 270px;
 }
@@ -488,36 +494,51 @@ a {
 
 #chat .header .users {
 	position: absolute;
-	width: 20px;
-	height: 20px;
-	left: 15px;
-	top: calc(50% - 10px);
+	height: 25px;
+	left: 12px;
+	top: calc(50% - 12px);
+	cursor: pointer;
+	transition: all 0.5s;
+}
+#chat .header .users b {
+	width: 25px;
+	height: 25px;
+	display: inline-block;
+	vertical-align: middle;
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
-	background-image: url("../img/users.png");
-	cursor: pointer;
-	transition: all 0.5s;
+	background-image: url(../img/users.png);
 	opacity: 0.25;
+}
+#chat .header .users i {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 12px;
+	font-weight: 100;
+	font-style: normal;
+	text-align: left;
+	padding-left: 5px;
 }
 #chat .header .users:hover {
 	transform: scale(1.25);
 }
-#chat .header .users.select {
+#chat .header .users.select b {
 	/*background-color: rgba(255,255,255,0.1);*/
 	opacity: 1;
 }
 
 #chat .users_list {
+	will-change: transform, opacity;
+	transform: skewY(45deg) rotateX(90deg) scale(0);
 	opacity: 0;
-	visibility: hidden;
 	transition: all 0.5s;
 	position: absolute;
 	top: 50px;
 	left: 10px;
 	right: 10px;
 	bottom: 10px;
-	background: #f5f5f5;
+	background: #ededed;
 	color: #333;
 	border-radius: 5px;
 	border: 1px solid rgba(0,0,0,0.2);
@@ -525,7 +546,7 @@ a {
 }
 #chat .users_list.show {
 	opacity: 1;
-	visibility: visible;
+	transform: skewY(0deg) rotateX(0) scale(1);
 }
 #chat .users_list .user {
 	padding: 8px 15px;
@@ -549,7 +570,7 @@ a {
 }
 
 #chat .messages {
-	height: calc(100% - 70px);
+	height: calc(100% - 25px);
 	background: #f5f5f5;
 	border: 1px solid rgba(0,0,0,0.1);
 	border-bottom: none;
@@ -690,6 +711,7 @@ a {
 
 
 #chat input {
+	display: none;
 	background: #e5e5e5;
 	color: #333;
 	font-weight: 400;
@@ -1123,6 +1145,11 @@ body #changelist_button.new {
 	font-weight: 300;
 	font-size: 14px;
 	margin-bottom: 20px;
+}
+#changelist p small {
+	opacity: 0.45;
+	font-size: 12px;
+	margin-left: 5px;
 }
 
 
