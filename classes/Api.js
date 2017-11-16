@@ -65,7 +65,7 @@ class Api extends Controller {
 
 			if (!data) {
 				this.db.conn.collection("rooms").insert(insert);
-				cb(true);
+				cb({name: insert.name, video: insert.video});
 			}
 			else {
 				cb(false);

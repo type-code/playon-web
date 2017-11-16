@@ -2,14 +2,14 @@ var Api = require("./Api.js");
 var fs = require("fs");
 
 class Router extends Controller {
-	constructor(app, Database, Connector) {
+	constructor(app, db, socket) {
 		super();
 		
 		this.app = app;
-		this.Database = Database;
-		this.Connector = Connector;
+		this.db = db;
+		this.socket = socket;
 
-		this.Api = new Api(this.Database);
+		this.Api = new Api(this.db);
 	}
 
 	// ROUTING: patyplay.ga/
@@ -41,6 +41,7 @@ class Router extends Controller {
 			res.json(smiles).end();
 		});
 
+		/////////////////////////////////////////////
 
 		this.app.get("/api/rooms/", (req, res) => {
 			this.Api.room_list((rooms) => {
@@ -51,9 +52,18 @@ class Router extends Controller {
 		this.app.post("/api/room/", (req, res) => {
 			this.Api.room_create({
 				name: req.body.name,
-				description: req.body.description
-			}, (success) => {
-				if (success) res.status(200).end();
+				description: req.body.description,
+				video: req.body.video,
+				creator: req.body.creator
+			}, (data) => {
+				if (data) {
+					res.status(200).end();
+
+					this.socket.emit("room_create", {
+						name: data.name,
+						video: data.video
+					});
+				}
 				else res.status(500).end();
 			});
 		});

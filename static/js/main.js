@@ -14,7 +14,7 @@ var window_title = document.title;
 var connetion_step = 0;
 var MessageSound = new Audio("/assets/message.mp3");
 var played = false;
-var room = "default";
+var room = document.location.hash.substr(1);
 var users = [];
 
 const HOST = document.location.hostname;
@@ -118,8 +118,12 @@ function socket_init() {
 		system_message({type: "disconnect"});
 	});
 
-	socket.on("reconnect", function(data){
+	socket.on("reconnect", (data) => {
 		system_message({type: "reconnect"});
+	});
+
+	socket.on("error_message", (data) => {
+		console.log("Server error: ", data);
 	});
 
 	socket.on("play", function(data){
