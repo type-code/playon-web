@@ -528,6 +528,58 @@ a {
 	opacity: 1;
 }
 
+#chat .smiles_open {
+	position: absolute;
+	right: 13px;
+	bottom: 13px;
+	width: 20px;
+	height: 20px;
+	transition: all 0.5s;
+	cursor: pointer;
+
+	background-image: url("../img/smiles.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+#chat .smiles_open:hover {
+	background-image: url("../img/smiles_hover.png");
+	transform: rotate(360deg);
+}
+#chat .smiles {
+	opacity: 0;
+	position: absolute;
+	bottom: 37px;
+	left: 11px;
+	right: 11px;
+	border-top: 1px solid rgba(0,0,0,0.1);
+	background: #e5e5e5;
+	max-height: 0px;
+	text-align: center;
+	overflow: auto;
+	padding: 0px;
+	transition: all 0.5s;
+}
+#chat .smiles.show {
+	opacity: 1;
+	max-height: 200px;
+	padding-top: 10px;
+}
+#chat .smiles img {
+	width: 30px;
+	height: 30px;
+	margin: 1px;
+	display: inline-block;
+	cursor: pointer;
+	padding: 4px;
+	transition: all 0.5s;
+	border-radius: 4px;
+	object-fit: contain;
+}
+#chat .smiles img:hover {
+	background-color: rgba(0,0,0,0.15);
+}
+
 #chat .users_list {
 	will-change: transform, opacity;
 	transform: skewY(45deg) rotateX(90deg) scale(0);
@@ -719,6 +771,7 @@ a {
 	width: 100%;
 	box-sizing: border-box;
 	padding: 5px 8px;
+	padding-right: 28px;
 	border-radius: 0px 0px 3px 3px;
 	border: 1px solid rgba(0,0,0,0.05);
 }
@@ -734,6 +787,9 @@ a {
 	background-color: rgba(255,255,255,0.0125);
 	color: white;
 }
+.dark #chat .smiles {
+	background-color: #282727;
+}
 .dark #chat .users_list {
 	background: #1a1a1a;
 	color: white;
@@ -744,20 +800,20 @@ a {
 }
 
 
-#chat .messages::-webkit-scrollbar {
+#chat ::-webkit-scrollbar {
 	width: 6px;
 }
-#chat .messages::-webkit-scrollbar-track {
+#chat ::-webkit-scrollbar-track {
 	background: transparent;
 	transition: all 0.5s;
 }
-#chat .messages::-webkit-scrollbar-thumb {
+#chat ::-webkit-scrollbar-thumb {
 	background: transparent;
 }
-#chat .messages:hover::-webkit-scrollbar-track {
+#chat :hover::-webkit-scrollbar-track {
 	background: rgba(0, 0, 0, 0.05);
 }
-#chat .messages:hover::-webkit-scrollbar-thumb {
+#chat :hover::-webkit-scrollbar-thumb {
 	background: rgba(0, 0, 0, 0.15);
 }
 

@@ -14,8 +14,9 @@ var window_title = document.title;
 var connetion_step = 0;
 var MessageSound = new Audio("/assets/message.mp3");
 var played = false;
-var room = document.location.hash.substr(1);
+var room = (document.location.hash || "#default").substr(1);
 var users = [];
+var smiles = [];
 
 const HOST = document.location.hostname;
 const MSG_MAX = 150;
@@ -284,15 +285,6 @@ function socket_init() {
 		changeLight(light);
 	});
 
-	function changeLight(light) {
-		if (light == false) {
-			$("body").addClass("dark");
-		}
-		else {
-			$("body").removeClass("dark");
-		}
-	}
-
 	socket.on("join", (data) => {
 		data.type = "join";
 		system_message(data);
@@ -326,146 +318,6 @@ function socket_init() {
 		data.type = "rename";
 		system_message(data);
 	});	
-
-	function system_message(data) {
-		var nick = data.nick;
-		var type = data.type
-		var text = null;
-
-		switch(type) {
-			case "join": {
-				text = `<b>${nick}</b> joined us...`;
-				break;
-			}
-			case "disc": {
-				text = `<b>${nick}</b> disconnected...`;
-				break;
-			}
-			case "play": {
-				text = `<b>${nick}</b> played video...`;
-				break;
-			}
-			case "pause": {
-				text = `<b>${nick}</b> paused video...`;
-				break;
-			}
-			case "load": {
-				text = `<b>${nick}</b> load video...`;
-				break;
-			}
-			case "rewind": {
-				var time = formatTime(data.time);
-				text = `${nick} rewind to <b>${time}</b>`;
-				break;
-			}
-			case "rename": {
-				text = `<b>${data.old_nick}</b> renamed to <b>${data.new_nick}</b>`;
-				break;
-			}
-			case "disconnect": {
-				text = "Connection lost! Reconnecting...";
-				break;
-			}
-			case "reconnect": {
-				text = "Connection repaired!";
-				break;
-			}
-		}
-
-		var date = formatDate(new Date().getTime());
-		var msg = `<div class="${type}" title="${date}">${text}</div>`;
-		$("#chat .messages").append(msg);
-
-		checkNewMessages();
-	}
-
-	function checkNewMessages() {
-		if ( !$("#chat").hasClass("active") ) {
-			if (new_messages > 0)
-				$("#chat .header .new").show();
-			new_messages++;
-			$("#chat .header .new").html(new_messages);
-		}
-		else {
-			if (window_blur) new_messages++;
-		}
-
-		if (window_blur) {
-			document.title = `(${new_messages}) - ${window_title}`;
-			MessageSound.play();
-		}
-	
-
-		$("#chat .messages").animate({
-			scrollTop: $("#chat .messages")[0].scrollHeight
-		}, "fast");
-	}
-
-	///////////////////////////////////
-	// SMILES GENERATE REGEXP's ///////
-	var smiles_buff = [ 
-		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "RoflEpic", "RoflMega", "Rofl"
-	], smiles = [];
-
-	for(var a in smiles_buff) {
-		var smile = smiles_buff[a];
-		var s1 = new RegExp(smile + " ", "g");
-		var s2 = new RegExp(smile + "Big ", "g");
-		var s3 = new RegExp(smile + "Blg ", "g");
-		smiles.push(s3);
-		smiles.push(s2);
-		smiles.push(s1);
-	}
-	////////////////////////////////////
-
-	function checkSmiles(text) {
-		if (text.slice(-1) != " ") text += " ";
-
-		for(var a in smiles) {
-			var smile = smiles[a];
-			var smile_clear = String(smile).replace("/","").replace("/g", "");
-			var smile_lower = smile_clear.toLocaleLowerCase().replace(" ", "");
-			var title = smile_clear;
-
-			if (smile_clear.indexOf("Big") == -1 && smile_clear.indexOf("Blg") == -1)
-				var file = `<img src='img/s/${smile_lower}.png' alt='${title}'>`;
-			else {
-				smile_lower = smile_lower.replace("big", "")
-				smile_lower = smile_lower.replace("blg", "");
-				var file = `<img src='img/s/${smile_lower}.png' class='big' alt='${title}'>`;
-				//console.log(smile, smile_clear, smile_lower, sss, file);
-			}
-
-			text = text.replace(smile, file);
-		};
-
-		return text;
-	}
-
-	function usersRedraw() {
-		$("#chat .users_list").empty();
-
-		for(var u in users) {
-			var user = users[u];
-			var online = users[nick].focus ? 'Watching video' : 'Does watch video';
-			var item = $("<div></div>");
-				item.addClass("user");
-				item.append(`<span class="${user.focus}" title="${online}"></span>`);
-				item.append(user.nick);
-				item.attr("data-nick", user.nick);
-				item.appendTo("#chat .users_list");
-		}
-		
-		$("#chat .header .users i").html(users.length);
-	}
-
-	function onlineRedraw(nick, focus) {
-		var online = users[nick].focus ? 'Watching video' : 'Does watching video';
-		var user = $(`#chat .users_list .user[data-nick='${nick}']`);
-			user.find("span").removeClass(String(!focus));
-			user.find("span").addClass(String(focus));
-			user.find("span").attr("title", online);
-	}
 
 	/////////////////////////////////////////////
 
@@ -653,31 +505,218 @@ function socket_init() {
 			$("#timeline .line").css("width", dir + "%");
 		}
 	}, 500);
+}
 
+function changeLight(light) {
+	if (light == false) {
+		$("body").addClass("dark");
+	}
+	else {
+		$("body").removeClass("dark");
+	}
+}
 
+function system_message(data) {
+	var nick = data.nick;
+	var type = data.type
+	var text = null;
 
-	function formatTime(time){
-		time = Math.round(time);
-		var minutes = Math.floor(time / 60)
-		var seconds = time - minutes * 60;
-		minutes = minutes < 10 ? '0' + minutes : minutes;
-		seconds = seconds < 10 ? '0' + seconds : seconds;
-		return minutes + ":" + seconds;
+	switch(type) {
+		case "join": {
+			text = `<b>${nick}</b> joined us...`;
+			break;
+		}
+		case "disc": {
+			text = `<b>${nick}</b> disconnected...`;
+			break;
+		}
+		case "play": {
+			text = `<b>${nick}</b> played video...`;
+			break;
+		}
+		case "pause": {
+			text = `<b>${nick}</b> paused video...`;
+			break;
+		}
+		case "load": {
+			text = `<b>${nick}</b> load video...`;
+			break;
+		}
+		case "rewind": {
+			var time = formatTime(data.time);
+			text = `${nick} rewind to <b>${time}</b>`;
+			break;
+		}
+		case "rename": {
+			text = `<b>${data.old_nick}</b> renamed to <b>${data.new_nick}</b>`;
+			break;
+		}
+		case "disconnect": {
+			text = "Connection lost! Reconnecting...";
+			break;
+		}
+		case "reconnect": {
+			text = "Connection repaired!";
+			break;
+		}
 	}
 
-	function formatDate(unix) {
-		var date = new Date(unix);	
-		var hours = date.getHours();
-		var minutes = date.getMinutes();
-		var seconds = date.getSeconds();
+	var date = formatDate(new Date().getTime());
+	var msg = `<div class="${type}" title="${date}">${text}</div>`;
+	$("#chat .messages").append(msg);
 
-		hours = (hours > 9 ? hours: "0"+hours);
-		minutes = (minutes > 9 ? minutes: "0"+minutes);
-		seconds = (seconds > 9 ? seconds: "0"+seconds);
+	checkNewMessages();
+}
 
-		return `${hours}:${minutes}:${seconds}`;
+function checkNewMessages() {
+	if ( !$("#chat").hasClass("active") ) {
+		if (new_messages > 0)
+			$("#chat .header .new").show();
+		new_messages++;
+		$("#chat .header .new").html(new_messages);
+	}
+	else {
+		if (window_blur) new_messages++;
 	}
 
+	if (window_blur) {
+		document.title = `(${new_messages}) - ${window_title}`;
+		MessageSound.play();
+	}
+
+
+	$("#chat .messages").animate({
+		scrollTop: $("#chat .messages")[0].scrollHeight
+	}, "fast");
+}
+
+///////////////////////////////////
+// SMILES GENERATE REGEXP's ///////
+
+function smiles_init() {
+	$.ajax({
+		url: "/api/smiles",
+		type: "GET",
+		dataType: "json",
+		success: function(data) {
+			var version = data.varsion;
+			var smiles = [];
+
+			if (localStorage.player_smiles_version != version) {
+				data.smiles.map((item) => {
+					smiles.push(item.name);
+				});
+
+				localStorage.player_smiles = JSON.stringify(smiles);
+				localStorage.player_smiles_version = version;
+			}
+			else {
+				smiles = JSON.parse(localStorage.player_smiles);
+			}
+
+			smiles_store(smiles);
+		}
+	});
+}
+
+function smiles_store(smiles_buff) {
+	/*var smiles_buff = [ 
+		"KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "FroggyOmg", "FroggySleep", "FroggyCry", "Facepalm", "ValakasSon", "Valakas", "Kombik", "Godzila", "Niger", "Ninja", "Vedro", "Pezda", "Ogre", "Kaef", "Girl", "Rage", "Omg", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "RoflEpic", "RoflMega", "Rofl"
+	], */
+
+	for(var a in smiles_buff) {
+		var smile = smiles_buff[a];
+		var smile_lower = smile.toLocaleLowerCase();
+		var s1 = new RegExp(smile + " ", "g");
+		var s2 = new RegExp(smile + "Big ", "g");
+		var s3 = new RegExp(smile + "Blg ", "g");
+		smiles.push(s3);
+		smiles.push(s2);
+		smiles.push(s1);
+
+		$("#chat .smiles").append(`<img src='/img/s/${smile_lower}.png' title='${smile}'>`);
+	}
+
+	$("#chat .smiles img").click(function(){
+		var smile = $(this).attr("title");
+		var message = $("#chat input").val();
+		$("#chat input").val(`${message}${smile} `);		
+	});
+}
+	
+////////////////////////////////////
+
+function checkSmiles(text) {
+	if (text.slice(-1) != " ") text += " ";
+
+	for(var a in smiles) {
+		var smile = smiles[a];
+		var smile_clear = String(smile).replace("/","").replace("/g", "");
+		var smile_lower = smile_clear.toLocaleLowerCase().replace(" ", "");
+		var title = smile_clear;
+
+		if (smile_clear.indexOf("Big") == -1 && smile_clear.indexOf("Blg") == -1)
+			var file = `<img src='img/s/${smile_lower}.png' alt='${title}'>`;
+		else {
+			smile_lower = smile_lower.replace("big", "")
+			smile_lower = smile_lower.replace("blg", "");
+			var file = `<img src='img/s/${smile_lower}.png' class='big' alt='${title}'>`;
+			//console.log(smile, smile_clear, smile_lower, sss, file);
+		}
+
+		text = text.replace(smile, file);
+	};
+
+	return text;
+}
+
+function usersRedraw() {
+	$("#chat .users_list").empty();
+
+	for(var u in users) {
+		var user = users[u];
+		var online = users[nick].focus ? 'Watching video' : 'Not watch video';
+		var item = $("<div></div>");
+			item.addClass("user");
+			item.append(`<span class="${user.focus}" title="${online}"></span>`);
+			item.append(user.nick);
+			item.attr("data-nick", user.nick);
+			item.appendTo("#chat .users_list");
+	}
+	
+	$("#chat .header .users i").html(users.length);
+}
+
+function onlineRedraw(nick, focus) {
+	var online = users[nick].focus ? 'Watching video' : 'Not watching video';
+	var user = $(`#chat .users_list .user[data-nick='${nick}']`);
+		user.find("span").removeClass(String(!focus));
+		user.find("span").addClass(String(focus));
+		user.find("span").attr("title", online);
+}
+
+
+
+function formatTime(time){
+	time = Math.round(time);
+	var minutes = Math.floor(time / 60)
+	var seconds = time - minutes * 60;
+	minutes = minutes < 10 ? '0' + minutes : minutes;
+	seconds = seconds < 10 ? '0' + seconds : seconds;
+	return minutes + ":" + seconds;
+}
+
+function formatDate(unix) {
+	var date = new Date(unix);	
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var seconds = date.getSeconds();
+
+	hours = (hours > 9 ? hours: "0"+hours);
+	minutes = (minutes > 9 ? minutes: "0"+minutes);
+	seconds = (seconds > 9 ? seconds: "0"+seconds);
+
+	return `${hours}:${minutes}:${seconds}`;
 }
 
 
@@ -746,6 +785,11 @@ $("#chat .header .new").click(function(){
 	$("#chat .header .new").html(new_messages);
 	$("#chat .header .new").fadeOut("slow");
 	return false;
+});
+
+
+$("#chat .smiles_open").click(function(){
+	$("#chat .smiles").toggleClass("show");
 });
 
 
@@ -847,6 +891,9 @@ async function openFile(file) {
 $(document).ready(function(){
 	//document.location.reload();
 	//socket_init();
+
+	smiles_init();
+
 	setTimeout(function(){
 		if (player == null) {
 			onYouTubeIframeAPIReady();
