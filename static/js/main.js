@@ -112,6 +112,8 @@ function socket_init() {
 			users[user.nick] = user;
 			users.length = data.users.length;
 		}
+
+		console.log(data);
 		usersRedraw();
 	});
 
@@ -316,6 +318,14 @@ function socket_init() {
 
 	socket.on("rename", (data) => {
 		data.type = "rename";
+
+		delete users[data.old_nick];
+		users[data.new_nick] = {
+			nick: data.new_nick,
+			focus: true
+		}
+
+		usersRedraw();
 		system_message(data);
 	});	
 

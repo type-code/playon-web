@@ -437,6 +437,7 @@ a {
 	z-index: 10;
 	position: relative;
 	box-sizing: border-box;
+	z-index: 175;
 }
 #chat.active .header {margin-bottom: 10px;}
 #chat .header .new {
@@ -536,6 +537,7 @@ a {
 	height: 20px;
 	transition: all 0.5s;
 	cursor: pointer;
+	z-index: 100;
 
 	background-image: url("../img/smiles.png");
 	background-size: cover;
@@ -559,6 +561,7 @@ a {
 	overflow: auto;
 	padding: 0px;
 	transition: all 0.5s;
+	z-index: 150;
 }
 #chat .smiles.show {
 	opacity: 1;
@@ -595,6 +598,7 @@ a {
 	border-radius: 5px;
 	border: 1px solid rgba(0,0,0,0.2);
 	overflow-y: auto;
+	z-index: 200;
 }
 #chat .users_list.show {
 	opacity: 1;
@@ -734,9 +738,11 @@ a {
 
 #chat .messages div img.big {
 	width: 100px;
-	height: initial;
+	height: 100px;
+	/*height: initial;*/
 	display: block;
 	margin: auto;
+	object-fit: contain;
 }
 
 #chat .messages div img.source {
