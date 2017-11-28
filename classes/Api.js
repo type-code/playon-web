@@ -2,7 +2,7 @@ class Api extends Controller {
 	constructor(db) {
 		super();
 
-		this.smiles_buff = [ "KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "Froggy1", "Froggy2", "Froggy3", "Facepalm", "ValakasSon", "Valakas", "Omg", "Ogre", "Kombik", "Godzila", "Niger", "Vedro", "Kaef", "Girl", "Rage", "Pezda", "Bro", "Rip", "Vac", "Yvo", "Len", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "RoflEpic", "RoflMega", "Rofl" ];
+		this.smiles_buff = [ "KappaOrange", "KappaPride", "KappaDark", "KappaRoss", "KappaHD", "KappaNinja", "KappaSoldier", "KappaWatch", "KappaSlava", "KeepoSlava", "Keepo", "Kappa", "Froggy1", "Froggy2", "Froggy3", "Facepalm", "ValakasSon", "Valakas", "Omg", "Niger", "Ogre", "OgreZombie", "Kombik", "Godzila", "Vedro", "Kaef", "Girl", "Rage", "Pezda", "Bro", "Rip", "Vac", "Yvo", "Len", "Evrei", "Dendi", "Story", "Omfg", "Cat", "Dog", "Hey", "Baby", "God", "Photo", "Angry", "Cry", "History", "Naruto", "Wow", "Love", "Slow", "Wut", "Frog", "Illuminati", "RoflEpic", "RoflMega", "Rofl" ];
 
 		this.db = db;
 	}

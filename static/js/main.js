@@ -113,7 +113,7 @@ function socket_init() {
 			users.length = data.users.length;
 		}
 
-		console.log(data);
+		//console.log(data);
 		usersRedraw();
 	});
 
@@ -307,6 +307,22 @@ function socket_init() {
 		onlineRedraw(data.nick, data.focus);
 	});
 
+	socket.on("sync", (data) => {
+		if (video != data.video) {
+			player.loadVideoById(data.video, data.time + delta);
+		}
+
+		var time = player.getCurrentTime();
+			time = parseInt(time);
+
+		// 1319 1320
+		console.log(time, data.time);
+
+		if (((data.time - 1) > time) || ((data.time + 1) < time)) {
+			player.seekTo(data.time);
+		}
+	});
+
 	socket.on("disc", (data) => {
 		data.type = "disc";
 		system_message(data);
@@ -357,6 +373,8 @@ function socket_init() {
 			if (text.length > MSG_MAX) text = text.substr(0, MSG_MAX);
 			socket.emit("message", {text, color});
 			$(this).val('');
+
+			$("#chat .smiles.show").removeClass("show");
 		}
 	});
 
