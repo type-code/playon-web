@@ -18,7 +18,8 @@ var room = (document.location.hash || "#default").substr(1);
 var users = [];
 var smiles = [];
 
-const HOST = document.location.hostname;
+//const HOST = document.location.hostname;
+const HOST = "patyplay.ga";
 const MSG_MAX = 150;
 
 window.onblur = function() {
@@ -70,7 +71,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 
-function player_init() {
+function player_init(event) {
 	if (localStorage.player_volume == undefined)
 		localStorage.player_volume = 50;
 
@@ -80,6 +81,15 @@ function player_init() {
 
 	player.setVolume(localStorage.player_volume);
 	$("#volume").val(localStorage.player_volume);
+
+	// console.log(event);
+	// player = event.target;
+	// event.target.playVideo();
+
+	// player.playVideo();
+	// setTimeout(() => {
+	// 	player.pauseVideo();
+	// }, 250);
 
 	socket_init();
 }
@@ -129,13 +139,16 @@ function socket_init() {
 		console.log("Server error: ", data);
 	});
 
-	socket.on("play", function(data){
-		if (data.video != video)
+	socket.on("play", (data) => {
+		if (data.video != video) {
 			player.loadVideoById(data.video, data.time);
+			video = data.video;
+		}
 		else {
 			player.seekTo(data.time, true);
-			player.playVideo();
 		}
+		
+		player.playVideo();
 		played = true;
 		data.type = "play";
 		system_message(data);
@@ -149,7 +162,7 @@ function socket_init() {
 	});
 
 	socket.on("load", function(data){
-		var video = data.video;
+		video = data.video;
 		player.cueVideoById(video, 0);
 		$("#timeline .line").css("width", "0%");
 		data.type = "load";
@@ -164,6 +177,10 @@ function socket_init() {
 
 		player.seekTo(time, true);
 		system_message(data);
+
+		setTimeout(refresh_timeline, 100);
+		setTimeout(refresh_timeline, 250);
+		setTimeout(refresh_timeline, 1000);
 	});
 
 	socket.on("message", function(data){
@@ -315,9 +332,6 @@ function socket_init() {
 		var time = player.getCurrentTime();
 			time = parseInt(time);
 
-		// 1319 1320
-		console.log(time, data.time);
-
 		if (((data.time - 1) > time) || ((data.time + 1) < time)) {
 			player.seekTo(data.time);
 		}
@@ -350,7 +364,6 @@ function socket_init() {
 
 	$("#play").click(function(){
 		socket.emit("play");
-		//player.playVideo();
 	});
 
 	$("#stop").click(function(){
@@ -521,18 +534,20 @@ function socket_init() {
 
 
 	setInterval(function(){
-		if (played) {
-			var current_clear = player.getCurrentTime();
-			var duration_clear = player.getDuration();
-			var current = formatTime(current_clear);
-			var duration = formatTime(duration_clear);
-			$("#timer .current").html(current);
-			$("#timer .duration").html(duration);
-
-			var dir = (current_clear / duration_clear) * 100;
-			$("#timeline .line").css("width", dir + "%");
-		}
+		if (played) refresh_timeline();
 	}, 500);
+}
+
+function refresh_timeline() {
+	var current_clear = player.getCurrentTime();
+	var duration_clear = player.getDuration();
+	var current = formatTime(current_clear);
+	var duration = formatTime(duration_clear);
+	$("#timer .current").html(current);
+	$("#timer .duration").html(duration);
+
+	var dir = (current_clear / duration_clear) * 100;
+	$("#timeline .line").css("width", dir + "%");
 }
 
 function changeLight(light) {
