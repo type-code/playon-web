@@ -106,6 +106,8 @@ function socket_init() {
 		var video_url = data.video;
 		var time = data.time;
 		played = data.play;
+		nick = data.nick;
+		localStorage.player_nick = nick;
 
 		if (played == true) {
 			player.loadVideoById(video_url, time + delta);
@@ -718,7 +720,7 @@ function usersRedraw() {
 
 	for(var u in users) {
 		var user = users[u];
-		var online = users[nick].focus ? 'Watching video' : 'Not watch video';
+		var online = user.focus ? 'Watching video' : 'Not watch video';
 		var item = $("<div></div>");
 			item.addClass("user");
 			item.append(`<span class="${user.focus}" title="${online}"></span>`);
