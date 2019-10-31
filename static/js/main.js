@@ -19,7 +19,7 @@ var users = [];
 var smiles = [];
 
 //const HOST = document.location.hostname;
-const HOST = "patyplay.ga";
+const HOST = "patyplay.fun";
 const MSG_MAX = 150;
 
 window.onblur = function() {
