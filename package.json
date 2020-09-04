@@ -22,7 +22,7 @@
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "htmlspecialchars": "^1.0.5",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.6.1",
     "socket.io-client": "^2.0.4"
   }
 }
